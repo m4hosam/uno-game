@@ -36,7 +36,7 @@ class UnoCardWidget extends StatelessWidget {
           ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.3),
+              color: Colors.black.withValues(alpha: 0.3),
               blurRadius: 4,
               offset: const Offset(0, 2),
             ),
@@ -74,7 +74,7 @@ class UnoCardWidget extends StatelessWidget {
           fontWeight: FontWeight.bold,
           shadows: [
             Shadow(
-              color: Colors.black.withOpacity(0.5),
+              color: Colors.black.withValues(alpha: 0.5),
               offset: const Offset(1, 1),
               blurRadius: 2,
             ),

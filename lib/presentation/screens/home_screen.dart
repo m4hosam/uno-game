@@ -32,8 +32,8 @@ class _HomeScreenState extends State<HomeScreen> {
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              AppTheme.unoRed.withOpacity(0.8),
-              AppTheme.unoBlue.withOpacity(0.8),
+              AppTheme.unoRed.withValues(alpha: 0.8),
+              AppTheme.unoBlue.withValues(alpha: 0.8),
             ],
           ),
         ),
