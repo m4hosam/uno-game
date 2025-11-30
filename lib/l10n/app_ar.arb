@@ -1,0 +1,23 @@
+{
+  "appTitle": "UNO متعدد اللاعبين",
+  "createRoom": "إنشاء غرفة",
+  "joinRoom": "انضمام لغرفة",
+  "enterName": "أدخل اسمك",
+  "settings": "الإعدادات",
+  "language": "اللغة",
+  "arabic": "العربية",
+  "english": "الإنجليزية",
+  "roomName": "اسم الغرفة",
+  "password": "كلمة المرور (اختياري)",
+  "create": "إنشاء",
+  "join": "انضمام",
+  "players": "اللاعبين",
+  "waitingForHost": "بانتظار المضيف لبدء اللعبة...",
+  "startGame": "بدء اللعبة",
+  "leaveRoom": "مغادرة الغرفة",
+  "uno": "أونو!",
+  "drawCard": "سحب ورقة",
+  "yourTurn": "دورك",
+  "winner": "فائز!",
+  "playAgain": "العب مرة أخرى"
+}

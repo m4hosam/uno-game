@@ -1,0 +1,23 @@
+{
+  "appTitle": "UNO Multiplayer",
+  "createRoom": "Create Room",
+  "joinRoom": "Join Room",
+  "enterName": "Enter your name",
+  "settings": "Settings",
+  "language": "Language",
+  "arabic": "Arabic",
+  "english": "English",
+  "roomName": "Room Name",
+  "password": "Password (Optional)",
+  "create": "Create",
+  "join": "Join",
+  "players": "Players",
+  "waitingForHost": "Waiting for host to start...",
+  "startGame": "Start Game",
+  "leaveRoom": "Leave Room",
+  "uno": "UNO!",
+  "drawCard": "Draw Card",
+  "yourTurn": "Your Turn",
+  "winner": "Winner!",
+  "playAgain": "Play Again"
+}

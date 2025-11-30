@@ -1,0 +1,44 @@
+name: flutter_unu_app
+description: "A new Flutter project."
+publish_to: "none"
+version: 0.1.0
+
+environment:
+  sdk: ">=3.0.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+
+  # Firebase
+  firebase_core: ^3.6.0
+  firebase_database: ^11.1.0
+  firebase_auth: ^5.3.1
+
+  # State Management
+  flutter_riverpod: ^2.6.1
+  riverpod_annotation: ^2.6.1
+
+  # Utils
+  intl: ^0.20.2
+  equatable: ^2.0.5
+  uuid: ^4.5.1
+  shared_preferences: ^2.3.2
+
+  # UI/UX
+  animate_do: ^3.3.4
+  audioplayers: ^6.0.0
+  google_fonts: ^6.2.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+  riverpod_generator: ^2.6.1
+  build_runner: ^2.4.13
+
+flutter:
+  uses-material-design: true
+  generate: true
