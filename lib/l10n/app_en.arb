@@ -8,10 +8,13 @@
   "arabic": "Arabic",
   "english": "English",
   "roomName": "Room Name",
+  "enterRoomName": "Please enter a room name",
   "password": "Password (Optional)",
+  "passwordOptional": "Password (Optional)",
   "create": "Create",
   "join": "Join",
   "players": "Players",
+  "maxPlayers": "Max Players",
   "waitingForHost": "Waiting for host to start...",
   "startGame": "Start Game",
   "leaveRoom": "Leave Room",
@@ -19,5 +22,13 @@
   "drawCard": "Draw Card",
   "yourTurn": "Your Turn",
   "winner": "Winner!",
-  "playAgain": "Play Again"
+  "playAgain": "Play Again",
+  "roomCode": "Room Code",
+  "enterRoomCode": "Please enter a room code",
+  "waitingRoom": "Waiting Room",
+  "roomNotFound": "Room not found",
+  "copiedToClipboard": "Copied to clipboard",
+  "host": "Host",
+  "player": "Player",
+  "gameOver": "Game Over"
 }

@@ -36,7 +36,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get roomName => 'Room Name';
 
   @override
+  String get enterRoomName => 'Please enter a room name';
+
+  @override
   String get password => 'Password (Optional)';
+
+  @override
+  String get passwordOptional => 'Password (Optional)';
 
   @override
   String get create => 'Create';
@@ -46,6 +52,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get players => 'Players';
+
+  @override
+  String get maxPlayers => 'Max Players';
 
   @override
   String get waitingForHost => 'Waiting for host to start...';
@@ -70,4 +79,28 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get playAgain => 'Play Again';
+
+  @override
+  String get roomCode => 'Room Code';
+
+  @override
+  String get enterRoomCode => 'Please enter a room code';
+
+  @override
+  String get waitingRoom => 'Waiting Room';
+
+  @override
+  String get roomNotFound => 'Room not found';
+
+  @override
+  String get copiedToClipboard => 'Copied to clipboard';
+
+  @override
+  String get host => 'Host';
+
+  @override
+  String get player => 'Player';
+
+  @override
+  String get gameOver => 'Game Over';
 }

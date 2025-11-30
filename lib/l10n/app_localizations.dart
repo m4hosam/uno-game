@@ -152,11 +152,23 @@ abstract class AppLocalizations {
   /// **'Room Name'**
   String get roomName;
 
+  /// No description provided for @enterRoomName.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a room name'**
+  String get enterRoomName;
+
   /// No description provided for @password.
   ///
   /// In en, this message translates to:
   /// **'Password (Optional)'**
   String get password;
+
+  /// No description provided for @passwordOptional.
+  ///
+  /// In en, this message translates to:
+  /// **'Password (Optional)'**
+  String get passwordOptional;
 
   /// No description provided for @create.
   ///
@@ -175,6 +187,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Players'**
   String get players;
+
+  /// No description provided for @maxPlayers.
+  ///
+  /// In en, this message translates to:
+  /// **'Max Players'**
+  String get maxPlayers;
 
   /// No description provided for @waitingForHost.
   ///
@@ -223,6 +241,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Play Again'**
   String get playAgain;
+
+  /// No description provided for @roomCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Room Code'**
+  String get roomCode;
+
+  /// No description provided for @enterRoomCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a room code'**
+  String get enterRoomCode;
+
+  /// No description provided for @waitingRoom.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting Room'**
+  String get waitingRoom;
+
+  /// No description provided for @roomNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'Room not found'**
+  String get roomNotFound;
+
+  /// No description provided for @copiedToClipboard.
+  ///
+  /// In en, this message translates to:
+  /// **'Copied to clipboard'**
+  String get copiedToClipboard;
+
+  /// No description provided for @host.
+  ///
+  /// In en, this message translates to:
+  /// **'Host'**
+  String get host;
+
+  /// No description provided for @player.
+  ///
+  /// In en, this message translates to:
+  /// **'Player'**
+  String get player;
+
+  /// No description provided for @gameOver.
+  ///
+  /// In en, this message translates to:
+  /// **'Game Over'**
+  String get gameOver;
 }
 
 class _AppLocalizationsDelegate

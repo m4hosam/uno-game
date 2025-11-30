@@ -8,10 +8,13 @@
   "arabic": "العربية",
   "english": "الإنجليزية",
   "roomName": "اسم الغرفة",
+  "enterRoomName": "الرجاء إدخال اسم الغرفة",
   "password": "كلمة المرور (اختياري)",
+  "passwordOptional": "كلمة المرور (اختياري)",
   "create": "إنشاء",
   "join": "انضمام",
   "players": "اللاعبين",
+  "maxPlayers": "الحد الأقصى للاعبين",
   "waitingForHost": "بانتظار المضيف لبدء اللعبة...",
   "startGame": "بدء اللعبة",
   "leaveRoom": "مغادرة الغرفة",
@@ -19,5 +22,13 @@
   "drawCard": "سحب ورقة",
   "yourTurn": "دورك",
   "winner": "فائز!",
-  "playAgain": "العب مرة أخرى"
+  "playAgain": "العب مرة أخرى",
+  "roomCode": "رمز الغرفة",
+  "enterRoomCode": "الرجاء إدخال رمز الغرفة",
+  "waitingRoom": "غرفة الانتظار",
+  "roomNotFound": "الغرفة غير موجودة",
+  "copiedToClipboard": "تم النسخ إلى الحافظة",
+  "host": "مضيف",
+  "player": "لاعب",
+  "gameOver": "انتهت اللعبة"
 }

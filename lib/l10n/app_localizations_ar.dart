@@ -36,7 +36,13 @@ class AppLocalizationsAr extends AppLocalizations {
   String get roomName => 'اسم الغرفة';
 
   @override
+  String get enterRoomName => 'الرجاء إدخال اسم الغرفة';
+
+  @override
   String get password => 'كلمة المرور (اختياري)';
+
+  @override
+  String get passwordOptional => 'كلمة المرور (اختياري)';
 
   @override
   String get create => 'إنشاء';
@@ -46,6 +52,9 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get players => 'اللاعبين';
+
+  @override
+  String get maxPlayers => 'الحد الأقصى للاعبين';
 
   @override
   String get waitingForHost => 'بانتظار المضيف لبدء اللعبة...';
@@ -70,4 +79,28 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get playAgain => 'العب مرة أخرى';
+
+  @override
+  String get roomCode => 'رمز الغرفة';
+
+  @override
+  String get enterRoomCode => 'الرجاء إدخال رمز الغرفة';
+
+  @override
+  String get waitingRoom => 'غرفة الانتظار';
+
+  @override
+  String get roomNotFound => 'الغرفة غير موجودة';
+
+  @override
+  String get copiedToClipboard => 'تم النسخ إلى الحافظة';
+
+  @override
+  String get host => 'مضيف';
+
+  @override
+  String get player => 'لاعب';
+
+  @override
+  String get gameOver => 'انتهت اللعبة';
 }
