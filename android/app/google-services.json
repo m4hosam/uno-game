@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "656127952663",
+    "firebase_url": "https://tourist-m4h-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "tourist-m4h",
+    "storage_bucket": "tourist-m4h.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:656127952663:android:4725990ab48b3ff2ea1952",
+        "android_client_info": {
+          "package_name": "com.tourstamp.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "656127952663-jive4dlf86tk0qva3m98ul4lqndkvver.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCcxnCJKWWV2TfjFiXQWeogqocwZs1bMDg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "656127952663-jive4dlf86tk0qva3m98ul4lqndkvver.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

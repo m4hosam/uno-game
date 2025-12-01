@@ -1,4 +1,4 @@
-package com.example.flutter_unu_app
+package com.tourstamp.app
 
 import io.flutter.embedding.android.FlutterActivity
 
