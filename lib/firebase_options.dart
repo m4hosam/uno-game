@@ -17,29 +17,17 @@ import 'package:flutter/foundation.dart'
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      throw UnsupportedError(
-        'DefaultFirebaseOptions have not been configured for web - '
-        'you can reconfigure this by running the FlutterFire CLI again.',
-      );
+      return web;
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
         return android;
       case TargetPlatform.iOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for ios - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return ios;
       case TargetPlatform.macOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for macos - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return macos;
       case TargetPlatform.windows:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for windows - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return windows;
       case TargetPlatform.linux:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for linux - '
@@ -57,8 +45,52 @@ class DefaultFirebaseOptions {
     appId: '1:656127952663:android:4725990ab48b3ff2ea1952',
     messagingSenderId: '656127952663',
     projectId: 'tourist-m4h',
-    databaseURL:
-        'https://tourist-m4h-default-rtdb.europe-west1.firebasedatabase.app',
+    databaseURL: 'https://tourist-m4h-default-rtdb.europe-west1.firebasedatabase.app',
     storageBucket: 'tourist-m4h.firebasestorage.app',
   );
+
+  static const FirebaseOptions web = FirebaseOptions(
+    apiKey: 'AIzaSyCtbARM3B9_U6H6yVDACjWB2D1n0vY3yAs',
+    appId: '1:656127952663:web:ec6b28d8957a78a7ea1952',
+    messagingSenderId: '656127952663',
+    projectId: 'tourist-m4h',
+    authDomain: 'tourist-m4h.firebaseapp.com',
+    databaseURL: 'https://tourist-m4h-default-rtdb.europe-west1.firebasedatabase.app',
+    storageBucket: 'tourist-m4h.firebasestorage.app',
+    measurementId: 'G-36D8J57HEP',
+  );
+
+  static const FirebaseOptions macos = FirebaseOptions(
+    apiKey: 'AIzaSyBfzlGriF82Iwqg1Cxj-Jd3hLRwYNVM30I',
+    appId: '1:656127952663:ios:39a1749d4bb2ca9eea1952',
+    messagingSenderId: '656127952663',
+    projectId: 'tourist-m4h',
+    databaseURL: 'https://tourist-m4h-default-rtdb.europe-west1.firebasedatabase.app',
+    storageBucket: 'tourist-m4h.firebasestorage.app',
+    iosClientId: '656127952663-jkl0q2ljg4k4dlvlau0sk10binvs1vit.apps.googleusercontent.com',
+    iosBundleId: 'com.example.flutterUnuApp',
+  );
+
+  static const FirebaseOptions ios = FirebaseOptions(
+    apiKey: 'AIzaSyBfzlGriF82Iwqg1Cxj-Jd3hLRwYNVM30I',
+    appId: '1:656127952663:ios:39a1749d4bb2ca9eea1952',
+    messagingSenderId: '656127952663',
+    projectId: 'tourist-m4h',
+    databaseURL: 'https://tourist-m4h-default-rtdb.europe-west1.firebasedatabase.app',
+    storageBucket: 'tourist-m4h.firebasestorage.app',
+    iosClientId: '656127952663-jkl0q2ljg4k4dlvlau0sk10binvs1vit.apps.googleusercontent.com',
+    iosBundleId: 'com.example.flutterUnuApp',
+  );
+
+  static const FirebaseOptions windows = FirebaseOptions(
+    apiKey: 'AIzaSyCtbARM3B9_U6H6yVDACjWB2D1n0vY3yAs',
+    appId: '1:656127952663:web:1cbcd21f99fdd3c0ea1952',
+    messagingSenderId: '656127952663',
+    projectId: 'tourist-m4h',
+    authDomain: 'tourist-m4h.firebaseapp.com',
+    databaseURL: 'https://tourist-m4h-default-rtdb.europe-west1.firebasedatabase.app',
+    storageBucket: 'tourist-m4h.firebasestorage.app',
+    measurementId: 'G-45JFNB5RB3',
+  );
+
 }
