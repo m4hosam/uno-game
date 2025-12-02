@@ -1,4 +1,5 @@
 import 'package:firebase_database/firebase_database.dart';
+import 'dart:math';
 import '../../domain/repositories/game_repository.dart';
 import '../models/game_room_model.dart';
 import '../models/player_model.dart';
@@ -15,8 +16,20 @@ class FirebaseGameRepository implements IGameService {
 
   @override
   Future<String> createRoom(String name, String? password, Player host) async {
-    final newRoomRef = _roomsRef.push();
-    final roomId = newRoomRef.key!;
+    String roomId = _generateRoomId();
+    DatabaseReference roomRef = _roomsRef.child(roomId);
+
+    // Ensure uniqueness (simple retry mechanism)
+    int retries = 0;
+    while ((await roomRef.get()).exists && retries < 5) {
+      roomId = _generateRoomId();
+      roomRef = _roomsRef.child(roomId);
+      retries++;
+    }
+
+    if (retries >= 5) {
+      throw Exception('Failed to generate unique room ID');
+    }
 
     final hostPlayer = host.copyWith(isHost: true, isReady: true);
 
@@ -29,8 +42,17 @@ class FirebaseGameRepository implements IGameService {
       status: RoomStatus.waiting,
     );
 
-    await newRoomRef.set(room.toMap());
+    await roomRef.set(room.toMap());
     return roomId;
+  }
+
+  String _generateRoomId() {
+    final random = Random();
+    final digits = List.generate(6, (_) => random.nextInt(10)).join();
+    final chars =
+        List.generate(2, (_) => String.fromCharCode(random.nextInt(26) + 65))
+            .join();
+    return '$digits$chars';
   }
 
   @override
