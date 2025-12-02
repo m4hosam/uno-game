@@ -10,7 +10,7 @@ abstract class IGameService {
   Future<void> playCard(String roomId, String playerId, UnoCard card,
       {CardColor? chosenColor});
   Future<void> drawCard(String roomId, String playerId);
-  Future<void> callUno(String roomId);
+  Future<void> callUno(String roomId, String playerId);
   Stream<GameRoom> roomStream(String roomId);
 }
 

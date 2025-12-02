@@ -232,10 +232,27 @@ class FirebaseGameRepository implements IGameService {
         cardCount: newHand.length,
       );
 
-      // Check for Winner
+      // Check for Winner or Penalty
       String? winnerId;
       if (newHand.isEmpty) {
-        winnerId = currentPlayer.id;
+        if (currentPlayer.hasCalledUno) {
+          winnerId = currentPlayer.id;
+        } else {
+          // Penalty: Draw 2 cards
+          var penaltyCards = _generateRandomCards(2);
+          newHand.addAll(penaltyCards);
+          players[playerIndex] = currentPlayer.copyWith(
+            hand: newHand,
+            cardCount: newHand.length,
+            hasCalledUno: false,
+          );
+          drawPileCount = (drawPileCount - 2).clamp(0, 108);
+          // Game continues, no winner yet
+        }
+      } else {
+        // Reset UNO flag if they have cards (just in case)
+        players[playerIndex] =
+            players[playerIndex].copyWith(hasCalledUno: false);
       }
 
       // Determine next player
@@ -334,6 +351,7 @@ class FirebaseGameRepository implements IGameService {
       players[playerIndex] = currentPlayer.copyWith(
         hand: newHand,
         cardCount: newHand.length,
+        hasCalledUno: false, // Reset UNO call on draw
       );
 
       String nextPlayerId = _gameLogic.getNextPlayerId(
@@ -356,8 +374,26 @@ class FirebaseGameRepository implements IGameService {
   }
 
   @override
-  Future<void> callUno(String roomId) async {
-    // Placeholder for UNO call logic
+  Future<void> callUno(String roomId, String playerId) async {
+    final roomRef = _roomsRef.child(roomId);
+
+    await roomRef.runTransaction((currentData) {
+      if (currentData == null) return Transaction.success(currentData);
+
+      final roomMap = Map<String, dynamic>.from(currentData as Map);
+      final room = GameRoom.fromMap(roomMap);
+
+      List<Player> players = List.from(room.players);
+      final playerIndex = players.indexWhere((p) => p.id == playerId);
+
+      if (playerIndex != -1) {
+        players[playerIndex] =
+            players[playerIndex].copyWith(hasCalledUno: true);
+        roomMap['players'] = players.map((p) => p.toMap()).toList();
+      }
+
+      return Transaction.success(roomMap);
+    });
   }
 
   @override

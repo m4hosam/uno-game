@@ -4,6 +4,7 @@ import '../../l10n/app_localizations.dart';
 import '../../core/theme/app_theme.dart';
 import '../../data/models/card_model.dart';
 import '../../data/models/player_model.dart';
+import '../../data/models/game_room_model.dart';
 import '../widgets/uno_card_widget.dart';
 import '../providers/game_providers.dart';
 import 'game_over_screen.dart';
@@ -43,8 +44,23 @@ class _GameScreenState extends ConsumerState<GameScreen> {
             return const Center(child: CircularProgressIndicator());
           }
 
-          final gameState = room.gameState!;
           final currentUser = currentUserAsync.value;
+
+          if (room.status == RoomStatus.finished) {
+            final isWinner = room.gameState!.winnerId == currentUser?.id;
+            int score = 0;
+            if (isWinner) {
+              final gameLogic = ref.read(gameLogicServiceProvider);
+              for (var p in room.players) {
+                if (p.id != currentUser?.id) {
+                  score += gameLogic.calculateScore(p.hand ?? []);
+                }
+              }
+            }
+            return GameOverScreen(isWinner: isWinner, score: score);
+          }
+
+          final gameState = room.gameState!;
 
           // Identify my player object to get my cards
           final myPlayer = room.players.firstWhere(
@@ -227,9 +243,20 @@ class _GameScreenState extends ConsumerState<GameScreen> {
                 bottom: 180,
                 right: 20,
                 child: FloatingActionButton(
-                  onPressed: () {
-                    if (room.id.isNotEmpty) {
-                      ref.read(gameRepositoryProvider).callUno(room.id);
+                  onPressed: () async {
+                    if (room.id.isNotEmpty && currentUser != null) {
+                      await ref
+                          .read(gameRepositoryProvider)
+                          .callUno(room.id, currentUser.id);
+                      if (context.mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text("UNO Called!"),
+                            backgroundColor: AppTheme.unoRed,
+                            duration: Duration(seconds: 1),
+                          ),
+                        );
+                      }
                     }
                   },
                   backgroundColor: AppTheme.unoRed,

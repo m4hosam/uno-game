@@ -7,6 +7,7 @@ class Player extends Equatable {
   final int cardCount; // For opponents view
   final bool isReady;
   final bool isHost;
+  final bool hasCalledUno;
   final List<UnoCard>? hand;
 
   const Player({
@@ -15,6 +16,7 @@ class Player extends Equatable {
     this.cardCount = 0,
     this.isReady = false,
     this.isHost = false,
+    this.hasCalledUno = false,
     this.hand,
   });
 
@@ -24,6 +26,7 @@ class Player extends Equatable {
     int? cardCount,
     bool? isReady,
     bool? isHost,
+    bool? hasCalledUno,
     List<UnoCard>? hand,
   }) {
     return Player(
@@ -32,12 +35,14 @@ class Player extends Equatable {
       cardCount: cardCount ?? this.cardCount,
       isReady: isReady ?? this.isReady,
       isHost: isHost ?? this.isHost,
+      hasCalledUno: hasCalledUno ?? this.hasCalledUno,
       hand: hand ?? this.hand,
     );
   }
 
   @override
-  List<Object?> get props => [id, name, cardCount, isReady, isHost, hand];
+  List<Object?> get props =>
+      [id, name, cardCount, isReady, isHost, hasCalledUno, hand];
 
   Map<String, dynamic> toMap() {
     return {
@@ -46,6 +51,7 @@ class Player extends Equatable {
       'cardCount': cardCount,
       'isReady': isReady,
       'isHost': isHost,
+      'hasCalledUno': hasCalledUno,
       'hand': hand?.map((x) => x.toMap()).toList(),
     };
   }
@@ -57,6 +63,7 @@ class Player extends Equatable {
       cardCount: map['cardCount'] ?? 0,
       isReady: map['isReady'] ?? false,
       isHost: map['isHost'] ?? false,
+      hasCalledUno: map['hasCalledUno'] ?? false,
       hand: map['hand'] != null
           ? List<UnoCard>.from((map['hand'] as List)
               .map((x) => UnoCard.fromMap(Map<String, dynamic>.from(x as Map))))
