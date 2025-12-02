@@ -8,6 +8,7 @@ class Player extends Equatable {
   final bool isReady;
   final bool isHost;
   final List<UnoCard>? hand;
+  final bool saidUno;
 
   const Player({
     required this.id,
@@ -16,6 +17,7 @@ class Player extends Equatable {
     this.isReady = false,
     this.isHost = false,
     this.hand,
+    this.saidUno = false,
   });
 
   Player copyWith({
@@ -25,6 +27,7 @@ class Player extends Equatable {
     bool? isReady,
     bool? isHost,
     List<UnoCard>? hand,
+    bool? saidUno,
   }) {
     return Player(
       id: id ?? this.id,
@@ -33,11 +36,13 @@ class Player extends Equatable {
       isReady: isReady ?? this.isReady,
       isHost: isHost ?? this.isHost,
       hand: hand ?? this.hand,
+      saidUno: saidUno ?? this.saidUno,
     );
   }
 
   @override
-  List<Object?> get props => [id, name, cardCount, isReady, isHost, hand];
+  List<Object?> get props =>
+      [id, name, cardCount, isReady, isHost, hand, saidUno];
 
   Map<String, dynamic> toMap() {
     return {
@@ -47,6 +52,7 @@ class Player extends Equatable {
       'isReady': isReady,
       'isHost': isHost,
       'hand': hand?.map((x) => x.toMap()).toList(),
+      'saidUno': saidUno,
     };
   }
 
@@ -61,6 +67,7 @@ class Player extends Equatable {
           ? List<UnoCard>.from((map['hand'] as List)
               .map((x) => UnoCard.fromMap(Map<String, dynamic>.from(x as Map))))
           : null,
+      saidUno: map['saidUno'] ?? false,
     );
   }
 }

@@ -15,6 +15,63 @@ class GameScreen extends ConsumerStatefulWidget {
   ConsumerState<GameScreen> createState() => _GameScreenState();
 }
 
+              // UNO Button
+              Positioned(
+                bottom: 180,
+                right: 20,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    if (myPlayer.saidUno)
+                      Container(
+                        margin: const EdgeInsets.only(bottom: 8),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: Colors.yellow,
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        child: const Text(
+                          'SAID UNO!',
+                          style: TextStyle(
+                              color: Colors.black, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    FloatingActionButton(
+                      onPressed: () {
+                        if (room.id.isNotEmpty && currentUser != null) {
+                          ref
+                              .read(gameRepositoryProvider)
+                              .callUno(room.id, currentUser.id);
+                        }
+                      },
+                      backgroundColor:
+                          myPlayer.saidUno ? Colors.green : AppTheme.unoRed,
+                      child: const Text('UNO',
+                          style: TextStyle(fontWeight: FontWeight.bold)),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          );
+        },
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (err, stack) => Center(
+            child: Text('Error: $err',
+                style: const TextStyle(color: Colors.white))),
+      ),
+    );
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Listen for game over
+    // Note: In Riverpod, it's better to use ref.listen in build, but for navigation we can use a listener in build.
+  }
+}
+
 class _GameScreenState extends ConsumerState<GameScreen> {
   @override
   Widget build(BuildContext context) {
@@ -22,6 +79,25 @@ class _GameScreenState extends ConsumerState<GameScreen> {
     final size = MediaQuery.of(context).size;
     final roomAsync = ref.watch(roomStreamProvider);
     final currentUserAsync = ref.watch(currentUserProvider);
+
+    // Listen for Game Over
+    ref.listen(roomStreamProvider, (previous, next) {
+      if (next.value?.status == RoomStatus.finished) {
+        // Navigate to Game Over Screen
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (context) => GameOverScreen(
+              winnerName: next.value?.players
+                      .firstWhere(
+                          (p) => p.id == next.value?.gameState?.winnerId,
+                          orElse: () => Player(id: '', name: 'Unknown'))
+                      .name ??
+                  'Unknown',
+            ),
+          ),
+        );
+      }
+    });
 
     return Scaffold(
       backgroundColor: const Color(0xFF1A1A1A),
@@ -226,15 +302,38 @@ class _GameScreenState extends ConsumerState<GameScreen> {
               Positioned(
                 bottom: 180,
                 right: 20,
-                child: FloatingActionButton(
-                  onPressed: () {
-                    if (room.id.isNotEmpty) {
-                      ref.read(gameRepositoryProvider).callUno(room.id);
-                    }
-                  },
-                  backgroundColor: AppTheme.unoRed,
-                  child: const Text('UNO',
-                      style: TextStyle(fontWeight: FontWeight.bold)),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    if (myPlayer.saidUno)
+                      Container(
+                        margin: const EdgeInsets.only(bottom: 8),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: Colors.yellow,
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        child: const Text(
+                          'SAID UNO!',
+                          style: TextStyle(
+                              color: Colors.black, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    FloatingActionButton(
+                      onPressed: () {
+                        if (room.id.isNotEmpty && currentUser != null) {
+                          ref
+                              .read(gameRepositoryProvider)
+                              .callUno(room.id, currentUser.id);
+                        }
+                      },
+                      backgroundColor:
+                          myPlayer.saidUno ? Colors.green : AppTheme.unoRed,
+                      child: const Text('UNO',
+                          style: TextStyle(fontWeight: FontWeight.bold)),
+                    ),
+                  ],
                 ),
               ),
             ],
