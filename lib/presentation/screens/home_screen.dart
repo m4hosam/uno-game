@@ -1,24 +1,80 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../l10n/app_localizations.dart';
 import '../../core/constants/app_constants.dart';
 import '../../core/theme/app_theme.dart';
+import '../providers/game_providers.dart';
 import 'create_room_screen.dart';
 import 'join_room_screen.dart';
 
-class HomeScreen extends StatefulWidget {
+class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  ConsumerState<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends ConsumerState<HomeScreen> {
   final TextEditingController _nameController = TextEditingController();
+  bool _isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // Pre-fill name if user is already signed in
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final currentUser = ref.read(authServiceProvider).currentUser;
+      if (currentUser != null) {
+        _nameController.text = currentUser.name;
+      }
+    });
+  }
 
   @override
   void dispose() {
     _nameController.dispose();
     super.dispose();
+  }
+
+  Future<void> _handleNavigation(Widget targetScreen) async {
+    final l10n = AppLocalizations.of(context)!;
+    if (_nameController.text.trim().isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(l10n.enterName)),
+      );
+      return;
+    }
+
+    setState(() => _isLoading = true);
+
+    try {
+      final authService = ref.read(authServiceProvider);
+      final currentUser = authService.currentUser;
+
+      if (currentUser == null) {
+        await authService.signInAnonymously(_nameController.text.trim());
+      } else if (currentUser.name != _nameController.text.trim()) {
+        await authService.updateDisplayName(_nameController.text.trim());
+      }
+
+      // Invalidate provider to ensure fresh data
+      ref.invalidate(currentUserProvider);
+
+      if (mounted) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => targetScreen),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error: $e')),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
   }
 
   @override
@@ -78,6 +134,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               border: const OutlineInputBorder(),
                               prefixIcon: const Icon(Icons.person),
                             ),
+                            enabled: !_isLoading,
                           ),
                         ],
                       ),
@@ -86,35 +143,27 @@ class _HomeScreenState extends State<HomeScreen> {
                   const SizedBox(height: 32),
 
                   // Action Buttons
-                  _buildActionButton(
-                    context,
-                    label: l10n.createRoom,
-                    icon: Icons.add_circle_outline,
-                    color: AppTheme.unoGreen,
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const CreateRoomScreen(),
-                        ),
-                      );
-                    },
-                  ),
-                  const SizedBox(height: 16),
-                  _buildActionButton(
-                    context,
-                    label: l10n.joinRoom,
-                    icon: Icons.login,
-                    color: AppTheme.unoYellow,
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const JoinRoomScreen(),
-                        ),
-                      );
-                    },
-                  ),
+                  if (_isLoading)
+                    const CircularProgressIndicator(color: Colors.white)
+                  else ...[
+                    _buildActionButton(
+                      context,
+                      label: l10n.createRoom,
+                      icon: Icons.add_circle_outline,
+                      color: AppTheme.unoGreen,
+                      onPressed: () =>
+                          _handleNavigation(const CreateRoomScreen()),
+                    ),
+                    const SizedBox(height: 16),
+                    _buildActionButton(
+                      context,
+                      label: l10n.joinRoom,
+                      icon: Icons.login,
+                      color: AppTheme.unoYellow,
+                      onPressed: () =>
+                          _handleNavigation(const JoinRoomScreen()),
+                    ),
+                  ],
 
                   const SizedBox(height: 32),
 

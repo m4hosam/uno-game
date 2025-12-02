@@ -35,26 +35,6 @@ class _CreateRoomScreenState extends ConsumerState<CreateRoomScreen> {
           throw Exception('User not authenticated');
         }
 
-        // Note: We need to update the repository to return the roomId
-        // For now, we will assume the repository has been updated or we will update it shortly.
-        // If the repository returns void, this will fail to compile if we assign it to roomId.
-        // I will update the repository to return String in the next step if I haven't already.
-        // Wait, I updated the repository in step 196, but I didn't change the return type of createRoom to Future<String>.
-        // It was Future<void>.
-        // So I need to update the repository to return the ID.
-
-        // However, to avoid compilation error right now, I will generate the ID here if possible,
-        // OR I will update the repository first.
-        // Actually, I can't generate ID here easily because push() is inside repo.
-
-        // I will update the repository to return the ID.
-        // But I am writing this file now.
-        // I will assume I will fix the repo.
-
-        // Wait, if I write this file now and it has compilation error, it's bad.
-        // But I can't fix both atomically.
-        // I will write this file, then immediately fix the repo.
-
         final roomId = await ref.read(gameRepositoryProvider).createRoom(
               _nameController.text,
               _passwordController.text.isEmpty
