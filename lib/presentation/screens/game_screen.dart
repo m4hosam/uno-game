@@ -83,8 +83,10 @@ class _GameScreenState extends ConsumerState<GameScreen> {
                     // Draw Pile
                     GestureDetector(
                       onTap: () {
-                        if (room.id.isNotEmpty) {
-                          ref.read(gameRepositoryProvider).drawCard(room.id);
+                        if (room.id.isNotEmpty && currentUser != null) {
+                          ref
+                              .read(gameRepositoryProvider)
+                              .drawCard(room.id, currentUser.id);
                         }
                       },
                       child: const UnoCardWidget(
@@ -133,10 +135,10 @@ class _GameScreenState extends ConsumerState<GameScreen> {
                           width: 80,
                           height: 120,
                           onTap: () {
-                            if (room.id.isNotEmpty) {
+                            if (room.id.isNotEmpty && currentUser != null) {
                               ref
                                   .read(gameRepositoryProvider)
-                                  .playCard(room.id, card);
+                                  .playCard(room.id, currentUser.id, card);
                             }
                           },
                         ),

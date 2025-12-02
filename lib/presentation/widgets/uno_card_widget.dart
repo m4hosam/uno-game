@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:animate_do/animate_do.dart';
 import '../../data/models/card_model.dart';
-import '../../core/theme/app_theme.dart';
 
 class UnoCardWidget extends StatelessWidget {
   final UnoCard? card; // Null means face down (back of card)
@@ -28,12 +28,7 @@ class UnoCardWidget extends StatelessWidget {
         height: height,
         margin: EdgeInsets.only(bottom: isSelected ? 20 : 0),
         decoration: BoxDecoration(
-          color: card != null ? _getCardColor(card!.color) : Colors.black,
           borderRadius: BorderRadius.circular(8),
-          border: Border.all(
-            color: Colors.white,
-            width: 2,
-          ),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withValues(alpha: 0.3),
@@ -43,104 +38,54 @@ class UnoCardWidget extends StatelessWidget {
           ],
         ),
         child: card != null
-            ? Center(child: _buildCardContent(card!))
-            : _buildCardBack(),
+            ? ZoomIn(
+                child: Image.asset(_getAssetPath(card!), fit: BoxFit.contain))
+            : Image.asset('docs/cards-assets/uno_deck.png',
+                fit: BoxFit.contain),
       ),
     );
   }
 
-  Color _getCardColor(CardColor color) {
-    switch (color) {
+  String _getAssetPath(UnoCard card) {
+    const basePath = 'docs/cards-assets';
+
+    if (card.type == CardType.wild) {
+      return '$basePath/change_colour_red.png'; // Default wild image, maybe dynamic based on state?
+      // Note: Ideally we show the chosen color if it's already played, but the asset is generic "change_colour".
+      // For a card in hand, it's just "change_colour".
+    }
+    if (card.type == CardType.wildDrawFour) {
+      return '$basePath/draw_four_128.png';
+    }
+
+    String colorPrefix = '';
+    switch (card.color) {
       case CardColor.red:
-        return AppTheme.unoRed;
+        colorPrefix = 'red';
+        break;
       case CardColor.blue:
-        return AppTheme.unoBlue;
+        colorPrefix = 'blue';
+        break;
       case CardColor.green:
-        return AppTheme.unoGreen;
+        colorPrefix = 'green';
+        break;
       case CardColor.yellow:
-        return AppTheme.unoYellow;
-      case CardColor.black:
-        return Colors.black;
+        colorPrefix = 'yellow';
+        break;
+      default:
+        colorPrefix = 'red'; // Fallback
     }
-  }
 
-  Widget _buildCardContent(UnoCard card) {
     if (card.type == CardType.number) {
-      return Text(
-        card.value.toString(),
-        style: TextStyle(
-          color: Colors.white,
-          fontSize: width * 0.6,
-          fontWeight: FontWeight.bold,
-          shadows: [
-            Shadow(
-              color: Colors.black.withValues(alpha: 0.5),
-              offset: const Offset(1, 1),
-              blurRadius: 2,
-            ),
-          ],
-        ),
-      );
-    } else {
-      IconData icon;
-      switch (card.type) {
-        case CardType.skip:
-          icon = Icons.block;
-          break;
-        case CardType.reverse:
-          icon = Icons.loop;
-          break;
-        case CardType.drawTwo:
-          icon = Icons.filter_2;
-          break;
-        case CardType.wild:
-          icon = Icons.colorize;
-          break;
-        case CardType.wildDrawFour:
-          icon = Icons.filter_4;
-          break;
-        default:
-          icon = Icons.error;
-      }
-      return Icon(
-        icon,
-        color: Colors.white,
-        size: width * 0.6,
-      );
+      return '$basePath/${colorPrefix}_${card.value}.png';
+    } else if (card.type == CardType.skip) {
+      return '$basePath/${colorPrefix}_skip.png';
+    } else if (card.type == CardType.reverse) {
+      return '$basePath/${colorPrefix}_reverse.png';
+    } else if (card.type == CardType.drawTwo) {
+      return '$basePath/${colorPrefix}_draw2.png';
     }
-  }
 
-  Widget _buildCardBack() {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.black,
-        borderRadius: BorderRadius.circular(6),
-        gradient: const LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [Color(0xFF333333), Colors.black],
-        ),
-      ),
-      child: Center(
-        child: Container(
-          width: width * 0.6,
-          height: height * 0.6,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            border: Border.all(color: AppTheme.unoRed, width: 2),
-          ),
-          child: const Center(
-            child: Text(
-              'UNO',
-              style: TextStyle(
-                color: AppTheme.unoYellow,
-                fontWeight: FontWeight.bold,
-                fontSize: 12,
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
+    return '$basePath/uno_deck.png'; // Fallback
   }
 }

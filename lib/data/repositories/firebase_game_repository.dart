@@ -175,7 +175,7 @@ class FirebaseGameRepository implements IGameService {
   }
 
   @override
-  Future<void> playCard(String roomId, UnoCard card,
+  Future<void> playCard(String roomId, String playerId, UnoCard card,
       {CardColor? chosenColor}) async {
     final roomRef = _roomsRef.child(roomId);
 
@@ -190,6 +190,11 @@ class FirebaseGameRepository implements IGameService {
       if (room.gameState == null) return Transaction.abort();
 
       final gameState = room.gameState!;
+
+      // Validate Turn
+      if (gameState.currentPlayerId != playerId) {
+        return Transaction.abort(); // Not your turn
+      }
 
       // Validate Move
       if (!_gameLogic.canPlayCard(
@@ -300,7 +305,7 @@ class FirebaseGameRepository implements IGameService {
   }
 
   @override
-  Future<void> drawCard(String roomId) async {
+  Future<void> drawCard(String roomId, String playerId) async {
     final roomRef = _roomsRef.child(roomId);
 
     await roomRef.runTransaction((currentData) {
@@ -311,6 +316,11 @@ class FirebaseGameRepository implements IGameService {
 
       if (room.gameState == null) return Transaction.abort();
       final gameState = room.gameState!;
+
+      // Validate Turn
+      if (gameState.currentPlayerId != playerId) {
+        return Transaction.abort(); // Not your turn
+      }
 
       List<Player> players = List.from(room.players);
       final playerIndex =

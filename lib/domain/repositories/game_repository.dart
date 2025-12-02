@@ -7,8 +7,9 @@ abstract class IGameService {
   Future<void> joinRoom(String roomId, String? password, Player player);
   Future<void> leaveRoom(String roomId, String playerId);
   Future<void> startGame(String roomId);
-  Future<void> playCard(String roomId, UnoCard card, {CardColor? chosenColor});
-  Future<void> drawCard(String roomId);
+  Future<void> playCard(String roomId, String playerId, UnoCard card,
+      {CardColor? chosenColor});
+  Future<void> drawCard(String roomId, String playerId);
   Future<void> callUno(String roomId);
   Stream<GameRoom> roomStream(String roomId);
 }
