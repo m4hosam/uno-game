@@ -116,35 +116,109 @@ class _GameScreenState extends ConsumerState<GameScreen> {
                 ),
               ),
 
+              // Turn Indicator
+              if (gameState.currentPlayerId == currentUser?.id)
+                Positioned(
+                  top: size.height * 0.2,
+                  left: 0,
+                  right: 0,
+                  child: Center(
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 8),
+                      decoration: BoxDecoration(
+                        color: Colors.green.withValues(alpha: 0.8),
+                        borderRadius: BorderRadius.circular(20),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.green.withValues(alpha: 0.4),
+                            blurRadius: 10,
+                            spreadRadius: 2,
+                          )
+                        ],
+                      ),
+                      child: const Text(
+                        "Your Turn!",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+
               // Player Hand
               Positioned(
                 bottom: 20,
                 left: 0,
                 right: 0,
                 height: 160,
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: (myPlayer.hand ?? []).map((card) {
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                        child: UnoCardWidget(
-                          card: card,
-                          width: 80,
-                          height: 120,
-                          onTap: () {
-                            if (room.id.isNotEmpty && currentUser != null) {
-                              ref
-                                  .read(gameRepositoryProvider)
-                                  .playCard(room.id, currentUser.id, card);
-                            }
-                          },
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    if (gameState.currentPlayerId == currentUser?.id &&
+                        !(myPlayer.hand ?? []).any((c) =>
+                            // Simple client-side check for prompt
+                            c.isWild ||
+                            c.color == gameState.currentColor ||
+                            (c.type != CardType.number &&
+                                c.type == gameState.topCard?.type) ||
+                            (c.type == CardType.number &&
+                                gameState.topCard?.type == CardType.number &&
+                                c.value == gameState.topCard?.value)))
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 8.0),
+                        child: Text(
+                          "No playable cards! Tap the deck to draw.",
+                          style: TextStyle(
+                            color: Colors.white.withValues(alpha: 0.8),
+                            fontStyle: FontStyle.italic,
+                          ),
                         ),
-                      );
-                    }).toList(),
-                  ),
+                      ),
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: (myPlayer.hand ?? []).map((card) {
+                          return Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 4.0),
+                            child: UnoCardWidget(
+                              card: card,
+                              width: 80,
+                              height: 120,
+                              onTap: () async {
+                                if (room.id.isNotEmpty && currentUser != null) {
+                                  try {
+                                    await ref
+                                        .read(gameRepositoryProvider)
+                                        .playCard(
+                                            room.id, currentUser.id, card);
+                                  } catch (e) {
+                                    if (context.mounted) {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        const SnackBar(
+                                          content: Text(
+                                              "Invalid move! Play a matching card."),
+                                          backgroundColor: Colors.red,
+                                          duration: Duration(seconds: 1),
+                                        ),
+                                      );
+                                    }
+                                  }
+                                }
+                              },
+                            ),
+                          );
+                        }).toList(),
+                      ),
+                    ),
+                  ],
                 ),
               ),
 

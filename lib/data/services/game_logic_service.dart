@@ -70,7 +70,7 @@ class GameLogicService {
     }
 
     // Match symbol/type (for action cards)
-    if (card.type == topCard.type) return true;
+    if (card.type != CardType.number && card.type == topCard.type) return true;
 
     return false;
   }
