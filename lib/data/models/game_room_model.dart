@@ -50,7 +50,7 @@ class GameRoom extends Equatable {
       hostId: map['hostId'] ?? '',
       players: List<Player>.from(
         (map['players'] as List<dynamic>? ?? []).map<Player>(
-          (x) => Player.fromMap(x as Map<String, dynamic>),
+          (x) => Player.fromMap(Map<String, dynamic>.from(x as Map)),
         ),
       ),
       maxPlayers: map['maxPlayers'] ?? 10,
@@ -59,7 +59,8 @@ class GameRoom extends Equatable {
         orElse: () => RoomStatus.waiting,
       ),
       gameState: map['gameState'] != null
-          ? GameState.fromMap(map['gameState'] as Map<String, dynamic>)
+          ? GameState.fromMap(
+              Map<String, dynamic>.from(map['gameState'] as Map))
           : null,
     );
   }

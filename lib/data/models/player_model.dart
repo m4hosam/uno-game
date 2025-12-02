@@ -58,8 +58,8 @@ class Player extends Equatable {
       isReady: map['isReady'] ?? false,
       isHost: map['isHost'] ?? false,
       hand: map['hand'] != null
-          ? List<UnoCard>.from(
-              (map['hand'] as List).map((x) => UnoCard.fromMap(x)))
+          ? List<UnoCard>.from((map['hand'] as List)
+              .map((x) => UnoCard.fromMap(Map<String, dynamic>.from(x as Map))))
           : null,
     );
   }

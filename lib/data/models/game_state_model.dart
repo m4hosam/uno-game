@@ -44,7 +44,8 @@ class GameState extends Equatable {
       currentPlayerId: map['currentPlayerId'] ?? '',
       isClockwise: map['isClockwise'] ?? true,
       currentColor: CardColor.values[map['currentColor'] ?? 0],
-      topCard: UnoCard.fromMap(map['topCard'] ?? {}),
+      topCard:
+          UnoCard.fromMap(Map<String, dynamic>.from(map['topCard'] as Map)),
       drawPileCount: map['drawPileCount'] ?? 0,
       winnerId: map['winnerId'],
     );
