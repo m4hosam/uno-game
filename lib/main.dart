@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'core/theme/app_theme.dart';
 import 'core/constants/app_constants.dart';
 import 'presentation/screens/home_screen.dart';
+import 'presentation/providers/settings_provider.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -17,17 +18,21 @@ void main() async {
   runApp(const ProviderScope(child: UnoApp()));
 }
 
-class UnoApp extends StatelessWidget {
+class UnoApp extends ConsumerWidget {
   const UnoApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final themeMode = ref.watch(themeProvider);
+    final locale = ref.watch(localeProvider);
+
     return MaterialApp(
       title: AppConstants.appName,
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
-      themeMode: ThemeMode.system,
+      themeMode: themeMode,
+      locale: locale,
       localizationsDelegates: const [
         AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
