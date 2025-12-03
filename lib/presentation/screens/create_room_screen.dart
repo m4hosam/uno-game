@@ -76,68 +76,70 @@ class _CreateRoomScreenState extends ConsumerState<CreateRoomScreen> {
       appBar: AppBar(
         title: Text(l10n.createRoom),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              TextFormField(
-                controller: _nameController,
-                decoration: InputDecoration(
-                  labelText: l10n.roomName,
-                  prefixIcon: const Icon(Icons.meeting_room),
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                TextFormField(
+                  controller: _nameController,
+                  decoration: InputDecoration(
+                    labelText: l10n.roomName,
+                    prefixIcon: const Icon(Icons.meeting_room),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return l10n.enterRoomName;
+                    }
+                    return null;
+                  },
                 ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return l10n.enterRoomName;
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 16),
-              TextFormField(
-                controller: _passwordController,
-                decoration: InputDecoration(
-                  labelText: l10n.passwordOptional,
-                  prefixIcon: const Icon(Icons.lock),
+                const SizedBox(height: 16),
+                TextFormField(
+                  controller: _passwordController,
+                  decoration: InputDecoration(
+                    labelText: l10n.passwordOptional,
+                    prefixIcon: const Icon(Icons.lock),
+                  ),
+                  obscureText: true,
                 ),
-                obscureText: true,
-              ),
-              const SizedBox(height: 24),
-              Text(
-                '${l10n.maxPlayers}: ${_maxPlayers.round()}',
-                style: Theme.of(context).textTheme.titleMedium,
-              ),
-              Slider(
-                value: _maxPlayers,
-                min: 2,
-                max: 4,
-                divisions: 2,
-                label: _maxPlayers.round().toString(),
-                onChanged: (value) {
-                  setState(() {
-                    _maxPlayers = value;
-                  });
-                },
-              ),
-              const SizedBox(height: 32),
-              ElevatedButton(
-                onPressed: _isLoading ? null : _createRoom,
-                style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  backgroundColor: AppTheme.unoBlue,
+                const SizedBox(height: 24),
+                Text(
+                  '${l10n.maxPlayers}: ${_maxPlayers.round()}',
+                  style: Theme.of(context).textTheme.titleMedium,
                 ),
-                child: _isLoading
-                    ? const CircularProgressIndicator(color: Colors.white)
-                    : Text(
-                        l10n.createRoom,
-                        style:
-                            const TextStyle(fontSize: 18, color: Colors.white),
-                      ),
-              ),
-            ],
+                Slider(
+                  value: _maxPlayers,
+                  min: 2,
+                  max: 4,
+                  divisions: 2,
+                  label: _maxPlayers.round().toString(),
+                  onChanged: (value) {
+                    setState(() {
+                      _maxPlayers = value;
+                    });
+                  },
+                ),
+                const SizedBox(height: 32),
+                ElevatedButton(
+                  onPressed: _isLoading ? null : _createRoom,
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    backgroundColor: AppTheme.unoBlue,
+                  ),
+                  child: _isLoading
+                      ? const CircularProgressIndicator(color: Colors.white)
+                      : Text(
+                          l10n.createRoom,
+                          style: const TextStyle(
+                              fontSize: 18, color: Colors.white),
+                        ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

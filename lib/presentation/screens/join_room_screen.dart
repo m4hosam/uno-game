@@ -76,51 +76,53 @@ class _JoinRoomScreenState extends ConsumerState<JoinRoomScreen> {
       appBar: AppBar(
         title: Text(l10n.joinRoom),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              TextFormField(
-                controller: _roomCodeController,
-                decoration: InputDecoration(
-                  labelText: l10n.roomCode,
-                  prefixIcon: const Icon(Icons.numbers),
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                TextFormField(
+                  controller: _roomCodeController,
+                  decoration: InputDecoration(
+                    labelText: l10n.roomCode,
+                    prefixIcon: const Icon(Icons.numbers),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return l10n.enterRoomCode;
+                    }
+                    return null;
+                  },
                 ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return l10n.enterRoomCode;
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 16),
-              TextFormField(
-                controller: _passwordController,
-                decoration: InputDecoration(
-                  labelText: l10n.passwordOptional,
-                  prefixIcon: const Icon(Icons.lock),
+                const SizedBox(height: 16),
+                TextFormField(
+                  controller: _passwordController,
+                  decoration: InputDecoration(
+                    labelText: l10n.passwordOptional,
+                    prefixIcon: const Icon(Icons.lock),
+                  ),
+                  obscureText: true,
                 ),
-                obscureText: true,
-              ),
-              const SizedBox(height: 32),
-              ElevatedButton(
-                onPressed: _isLoading ? null : _joinRoom,
-                style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  backgroundColor: AppTheme.unoGreen,
+                const SizedBox(height: 32),
+                ElevatedButton(
+                  onPressed: _isLoading ? null : _joinRoom,
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    backgroundColor: AppTheme.unoGreen,
+                  ),
+                  child: _isLoading
+                      ? const CircularProgressIndicator(color: Colors.white)
+                      : Text(
+                          l10n.joinRoom,
+                          style: const TextStyle(
+                              fontSize: 18, color: Colors.white),
+                        ),
                 ),
-                child: _isLoading
-                    ? const CircularProgressIndicator(color: Colors.white)
-                    : Text(
-                        l10n.joinRoom,
-                        style:
-                            const TextStyle(fontSize: 18, color: Colors.white),
-                      ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
