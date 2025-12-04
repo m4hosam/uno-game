@@ -211,22 +211,46 @@ class _GameScreenState extends ConsumerState<GameScreen> {
                                 onTap: () async {
                                   if (room.id.isNotEmpty &&
                                       currentUser != null) {
-                                    try {
-                                      await ref
-                                          .read(gameRepositoryProvider)
-                                          .playCard(
-                                              room.id, currentUser.id, card);
-                                    } catch (e) {
-                                      if (context.mounted) {
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(
-                                          const SnackBar(
-                                            content: Text(
-                                                "Invalid move! Play a matching card."),
-                                            backgroundColor: Colors.red,
-                                            duration: Duration(seconds: 1),
-                                          ),
-                                        );
+                                    if (card.isWild) {
+                                      final chosenColor =
+                                          await _showColorPickerDialog(context);
+                                      if (chosenColor != null) {
+                                        try {
+                                          await ref
+                                              .read(gameRepositoryProvider)
+                                              .playCard(
+                                                  room.id, currentUser.id, card,
+                                                  chosenColor: chosenColor);
+                                        } catch (e) {
+                                          if (context.mounted) {
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(
+                                              SnackBar(
+                                                content: Text("Error: $e"),
+                                                backgroundColor: Colors.red,
+                                              ),
+                                            );
+                                          }
+                                        }
+                                      }
+                                    } else {
+                                      try {
+                                        await ref
+                                            .read(gameRepositoryProvider)
+                                            .playCard(
+                                                room.id, currentUser.id, card);
+                                      } catch (e) {
+                                        if (context.mounted) {
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            const SnackBar(
+                                              content: Text(
+                                                  "Invalid move! Play a matching card."),
+                                              backgroundColor: Colors.red,
+                                              duration: Duration(seconds: 1),
+                                            ),
+                                          );
+                                        }
                                       }
                                     }
                                   }
@@ -327,5 +351,61 @@ class _GameScreenState extends ConsumerState<GameScreen> {
       default:
         return Colors.grey;
     }
+  }
+
+  Future<CardColor?> _showColorPickerDialog(BuildContext context) async {
+    return showDialog<CardColor>(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => AlertDialog(
+        backgroundColor: Colors.grey[900],
+        title: const Text('Choose Color',
+            style: TextStyle(color: Colors.white), textAlign: TextAlign.center),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                _buildColorOption(context, CardColor.red, AppTheme.unoRed),
+                _buildColorOption(context, CardColor.blue, AppTheme.unoBlue),
+              ],
+            ),
+            const SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                _buildColorOption(context, CardColor.green, AppTheme.unoGreen),
+                _buildColorOption(
+                    context, CardColor.yellow, AppTheme.unoYellow),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildColorOption(
+      BuildContext context, CardColor color, Color uiColor) {
+    return GestureDetector(
+      onTap: () => Navigator.of(context).pop(color),
+      child: Container(
+        width: 60,
+        height: 60,
+        decoration: BoxDecoration(
+          color: uiColor,
+          shape: BoxShape.circle,
+          border: Border.all(color: Colors.white, width: 2),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.3),
+              blurRadius: 4,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

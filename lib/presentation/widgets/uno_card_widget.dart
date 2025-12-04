@@ -50,12 +50,13 @@ class UnoCardWidget extends StatelessWidget {
     const basePath = 'docs/cards-assets';
 
     if (card.type == CardType.wild) {
-      return '$basePath/change_colour_red.png'; // Default wild image, maybe dynamic based on state?
-      // Note: Ideally we show the chosen color if it's already played, but the asset is generic "change_colour".
-      // For a card in hand, it's just "change_colour".
+      // Use one of the 4 variations based on ID
+      final variant = (card.id.hashCode % 4) + 1;
+      return '$basePath/change_colour$variant.png';
     }
     if (card.type == CardType.wildDrawFour) {
-      return '$basePath/draw_four_128.png';
+      final variant = (card.id.hashCode % 4) + 1;
+      return '$basePath/draw_four$variant.png';
     }
 
     String colorPrefix = '';
