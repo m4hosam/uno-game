@@ -149,7 +149,7 @@ class _GameScreenState extends ConsumerState<GameScreen>
 
                 // --- Center Area (Deck & Discard) ---
                 Align(
-                  alignment: const Alignment(0, -0.2),
+                  alignment: const Alignment(0, -0.35),
                   child:
                       _buildCenterPile(gameState, room, currentUser, isMyTurn),
                 ),
@@ -818,12 +818,12 @@ class _PlayerAvatar extends StatelessWidget {
                   ),
                 ),
                 child: CircleAvatar(
-                  radius: isCurrentUser ? 32 : 28,
+                  radius: isCurrentUser ? 24 : 28,
                   backgroundColor: Colors.transparent,
                   child: Icon(
                     Icons.person,
                     color: Colors.white70,
-                    size: isCurrentUser ? 32 : 28,
+                    size: isCurrentUser ? 24 : 28,
                   ),
                 ),
               ),
