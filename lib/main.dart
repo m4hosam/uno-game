@@ -5,7 +5,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'core/theme/app_theme.dart';
 import 'core/constants/app_constants.dart';
-import 'presentation/screens/home_screen.dart';
+import 'presentation/screens/welcome_screen.dart';
 import 'presentation/providers/settings_provider.dart';
 import 'firebase_options.dart';
 
@@ -43,7 +43,7 @@ class UnoApp extends ConsumerWidget {
         Locale('en'), // English
         Locale('ar'), // Arabic
       ],
-      home: const HomeScreen(),
+      home: const WelcomeScreen(),
     );
   }
 }

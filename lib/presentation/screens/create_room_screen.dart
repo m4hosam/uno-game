@@ -16,7 +16,6 @@ class _CreateRoomScreenState extends ConsumerState<CreateRoomScreen> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _passwordController = TextEditingController();
-  double _maxPlayers = 4;
   bool _isLoading = false;
 
   @override
@@ -32,6 +31,7 @@ class _CreateRoomScreenState extends ConsumerState<CreateRoomScreen> {
       try {
         final currentUser = await ref.read(currentUserProvider.future);
         if (currentUser == null) {
+          // Should handle this better, but for now assuming auth flow
           throw Exception('User not authenticated');
         }
 
@@ -72,23 +72,76 @@ class _CreateRoomScreenState extends ConsumerState<CreateRoomScreen> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
 
+    // Custom header style
+    final headerStyle = TextStyle(
+      color: Colors.white.withValues(alpha: 0.5),
+      fontSize: 14,
+    );
+
     return Scaffold(
+      backgroundColor: AppTheme.backgroundColor,
       appBar: AppBar(
-        title: Text(l10n.createRoom),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
+          onPressed: () => Navigator.pop(context),
+        ),
+        title: Text(
+          'Create Game Channel',
+          style:
+              const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        ),
+        centerTitle: true,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
       ),
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(24.0),
           child: Form(
             key: _formKey,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
+                const SizedBox(height: 20),
+
+                // Deck Image
+                Center(
+                  child: Container(
+                    width: 200,
+                    height: 200,
+                    decoration: BoxDecoration(
+                      color: const Color(
+                          0xFFF4B886), // Beige background square from design
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    clipBehavior:
+                        Clip.antiAlias, // Ensure image respects border radius
+                    child: Image.asset(
+                      'docs/cards-assets/uno_deck.png',
+                      fit: BoxFit.contain, // Fit within the box
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 48),
+
+                // Server Name Input
+                Text('Server Name', style: headerStyle),
+                const SizedBox(height: 8),
                 TextFormField(
                   controller: _nameController,
+                  style: const TextStyle(color: Colors.white),
                   decoration: InputDecoration(
-                    labelText: l10n.roomName,
-                    prefixIcon: const Icon(Icons.meeting_room),
+                    hintText: 'Ahmed\'s Uno Night',
+                    hintStyle:
+                        TextStyle(color: Colors.white.withValues(alpha: 0.3)),
+                    filled: true,
+                    fillColor: const Color(0xFF2C2C2E), // Dark grey input bg
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide.none,
+                    ),
+                    contentPadding: const EdgeInsets.all(16),
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -97,46 +150,57 @@ class _CreateRoomScreenState extends ConsumerState<CreateRoomScreen> {
                     return null;
                   },
                 ),
-                const SizedBox(height: 16),
+
+                const SizedBox(height: 24),
+
+                // Password Input
+                Text('Password (optional)', style: headerStyle),
+                const SizedBox(height: 8),
                 TextFormField(
                   controller: _passwordController,
+                  style: const TextStyle(color: Colors.white),
                   decoration: InputDecoration(
-                    labelText: l10n.passwordOptional,
-                    prefixIcon: const Icon(Icons.lock),
+                    hintText: 'Leave blank for public game',
+                    hintStyle: TextStyle(color: Colors.white.withOpacity(0.3)),
+                    filled: true,
+                    fillColor: const Color(0xFF2C2C2E),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide.none,
+                    ),
+                    contentPadding: const EdgeInsets.all(16),
+                    suffixIcon:
+                        const Icon(Icons.remove_red_eye, color: Colors.grey),
                   ),
                   obscureText: true,
                 ),
-                const SizedBox(height: 24),
-                Text(
-                  '${l10n.maxPlayers}: ${_maxPlayers.round()}',
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
-                Slider(
-                  value: _maxPlayers,
-                  min: 2,
-                  max: 4,
-                  divisions: 2,
-                  label: _maxPlayers.round().toString(),
-                  onChanged: (value) {
-                    setState(() {
-                      _maxPlayers = value;
-                    });
-                  },
-                ),
-                const SizedBox(height: 32),
-                ElevatedButton(
-                  onPressed: _isLoading ? null : _createRoom,
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    backgroundColor: AppTheme.unoBlue,
+
+                const SizedBox(height: 48), // Spacer to push button down
+
+                // Create Button
+                SizedBox(
+                  width: double.infinity,
+                  height: 56,
+                  child: ElevatedButton(
+                    onPressed: _isLoading ? null : _createRoom,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFFFFD700), // Yellow button
+                      foregroundColor: Colors.black, // Dark text on yellow
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      elevation: 0,
+                    ),
+                    child: _isLoading
+                        ? const CircularProgressIndicator(color: Colors.black)
+                        : Text(
+                            l10n.createRoom, // "Create"
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                   ),
-                  child: _isLoading
-                      ? const CircularProgressIndicator(color: Colors.white)
-                      : Text(
-                          l10n.createRoom,
-                          style: const TextStyle(
-                              fontSize: 18, color: Colors.white),
-                        ),
                 ),
               ],
             ),

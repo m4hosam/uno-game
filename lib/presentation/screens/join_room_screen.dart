@@ -14,7 +14,7 @@ class JoinRoomScreen extends ConsumerStatefulWidget {
 
 class _JoinRoomScreenState extends ConsumerState<JoinRoomScreen> {
   final _formKey = GlobalKey<FormState>();
-  final _roomCodeController = TextEditingController();
+  final _roomCodeController = TextEditingController(); // Used as Server Name
   final _passwordController = TextEditingController();
   bool _isLoading = false;
 
@@ -35,6 +35,7 @@ class _JoinRoomScreenState extends ConsumerState<JoinRoomScreen> {
         }
 
         final roomId = _roomCodeController.text;
+        // Logic for joining by room name (which acts as ID/code for now)
         await ref.read(gameRepositoryProvider).joinRoom(
               roomId,
               _passwordController.text.isEmpty
@@ -72,23 +73,73 @@ class _JoinRoomScreenState extends ConsumerState<JoinRoomScreen> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
 
+    final headerStyle = TextStyle(
+      color: Colors.white.withValues(alpha: 0.5),
+      fontSize: 14,
+    );
+
+    final inputDecoration = InputDecoration(
+      filled: true,
+      fillColor: const Color(0xFF2C2121), // reddish dark
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: BorderSide(color: Colors.red.withValues(alpha: 0.1)),
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: BorderSide(color: Colors.red.withValues(alpha: 0.1)),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: BorderSide(color: AppTheme.unoRed),
+      ),
+      hintStyle: TextStyle(color: Colors.white.withValues(alpha: 0.3)),
+      contentPadding: const EdgeInsets.all(16),
+    );
+
     return Scaffold(
+      backgroundColor: AppTheme.backgroundColor,
       appBar: AppBar(
-        title: Text(l10n.joinRoom),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
+          onPressed: () => Navigator.pop(context),
+        ),
+        title: Text(
+          'Join Game Channel', // Matches design text
+          style:
+              const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        ),
+        centerTitle: true,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
       ),
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(24.0),
           child: Form(
             key: _formKey,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
+                const SizedBox(height: 20),
+
+                Text('Join a Game Channel',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    )),
+
+                const SizedBox(height: 32),
+
+                // Server Name
+                Text('Server Name', style: headerStyle),
+                const SizedBox(height: 8),
                 TextFormField(
                   controller: _roomCodeController,
-                  decoration: InputDecoration(
-                    labelText: l10n.roomCode,
-                    prefixIcon: const Icon(Icons.numbers),
+                  style: const TextStyle(color: Colors.white),
+                  decoration: inputDecoration.copyWith(
+                    hintText: 'e.g., "Ahmed\'s Game"',
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -97,30 +148,51 @@ class _JoinRoomScreenState extends ConsumerState<JoinRoomScreen> {
                     return null;
                   },
                 ),
-                const SizedBox(height: 16),
+
+                const SizedBox(height: 24),
+
+                // Password
+                Text('Password', style: headerStyle),
+                const SizedBox(height: 8),
                 TextFormField(
                   controller: _passwordController,
-                  decoration: InputDecoration(
-                    labelText: l10n.passwordOptional,
-                    prefixIcon: const Icon(Icons.lock),
+                  style: const TextStyle(color: Colors.white),
+                  decoration: inputDecoration.copyWith(
+                    hintText: 'Enter password',
+                    suffixIcon:
+                        const Icon(Icons.remove_red_eye, color: Colors.white38),
                   ),
                   obscureText: true,
                 ),
-                const SizedBox(height: 32),
-                ElevatedButton(
-                  onPressed: _isLoading ? null : _joinRoom,
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    backgroundColor: AppTheme.unoGreen,
+
+                const Spacer(),
+
+                // Join Button
+                SizedBox(
+                  width: double.infinity,
+                  height: 56,
+                  child: ElevatedButton(
+                    onPressed: _isLoading ? null : _joinRoom,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFFE81E32), // Uno Red
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      elevation: 0,
+                    ),
+                    child: _isLoading
+                        ? const CircularProgressIndicator(color: Colors.white)
+                        : Text(
+                            'Join', // "Join"
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                   ),
-                  child: _isLoading
-                      ? const CircularProgressIndicator(color: Colors.white)
-                      : Text(
-                          l10n.joinRoom,
-                          style: const TextStyle(
-                              fontSize: 18, color: Colors.white),
-                        ),
                 ),
+                const SizedBox(height: 16),
               ],
             ),
           ),
