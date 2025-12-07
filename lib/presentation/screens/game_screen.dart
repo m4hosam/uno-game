@@ -15,7 +15,32 @@ class GameScreen extends ConsumerStatefulWidget {
   ConsumerState<GameScreen> createState() => _GameScreenState();
 }
 
-class _GameScreenState extends ConsumerState<GameScreen> {
+class _GameScreenState extends ConsumerState<GameScreen>
+    with TickerProviderStateMixin {
+  late AnimationController _pulseController;
+  late AnimationController _cardFanController;
+
+  @override
+  void initState() {
+    super.initState();
+    _pulseController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1500),
+    )..repeat(reverse: true);
+
+    _cardFanController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 300),
+    )..forward();
+  }
+
+  @override
+  void dispose() {
+    _pulseController.dispose();
+    _cardFanController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -23,22 +48,26 @@ class _GameScreenState extends ConsumerState<GameScreen> {
     final currentUserAsync = ref.watch(currentUserProvider);
 
     return Scaffold(
-      backgroundColor: const Color(0xFF1E1111), // Dark AppTheme background
+      backgroundColor: const Color(0xFF1E1111),
       appBar: AppBar(
         title: Text(
-          roomAsync.value?.name ?? 'The Fun Zone', // Fallback or room name
-          style: const TextStyle(fontWeight: FontWeight.bold),
+          roomAsync.value?.name ?? 'The Fun Zone',
+          style: const TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
+          ),
         ),
         centerTitle: true,
-        backgroundColor: Colors.transparent,
+        backgroundColor: Colors.black26,
         elevation: 0,
         foregroundColor: Colors.white,
         leading: IconButton(
-            icon: const Icon(Icons.arrow_back_ios),
-            onPressed: () => Navigator.of(context).pop()),
+          icon: const Icon(Icons.arrow_back_ios_new, size: 20),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.settings),
+            icon: const Icon(Icons.settings_outlined),
             onPressed: () {},
           ),
         ],
@@ -65,7 +94,6 @@ class _GameScreenState extends ConsumerState<GameScreen> {
             }
             return GameOverScreen(isWinner: isWinner, score: score);
           }
-
           final gameState = room.gameState!;
 
           // Identify my player
@@ -85,6 +113,8 @@ class _GameScreenState extends ConsumerState<GameScreen> {
           } else {
             opponents.addAll(allPlayers.where((p) => p.id != currentUser?.id));
           }
+
+          final isMyTurn = gameState.currentPlayerId == currentUser?.id;
 
           return SafeArea(
             child: Stack(
@@ -120,197 +150,22 @@ class _GameScreenState extends ConsumerState<GameScreen> {
                 // --- Center Area (Deck & Discard) ---
                 Align(
                   alignment: const Alignment(0, -0.2),
-                  child: SizedBox(
-                    width: 280, // Enough space for deck + discard row
-                    height: 180,
-                    child: Stack(
-                      clipBehavior: Clip.none,
-                      alignment: Alignment.center,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            // Draw Pile
-                            GestureDetector(
-                              onTap: () {
-                                if (gameState.currentPlayerId ==
-                                    currentUser?.id) {
-                                  ref
-                                      .read(gameRepositoryProvider)
-                                      .drawCard(room.id, currentUser!.id);
-                                }
-                              },
-                              child: Image.asset(
-                                'docs/cards-assets/uno_deck.png',
-                                width: 100, // Increased size
-                                height: 150,
-                                fit: BoxFit.contain,
-                              ),
-                            ),
-
-                            const SizedBox(width: 30), // Increased spacing
-
-                            // Discard Pile
-                            if (gameState.topCard != null)
-                              Transform.rotate(
-                                angle: 0.1,
-                                child: UnoCardWidget(
-                                  card: gameState.topCard,
-                                  width: 110, // Increased size
-                                  height: 165,
-                                ),
-                              ),
-                          ],
-                        ),
-
-                        // Color Indicator (Relative to Discard Pile)
-                        if (gameState.topCard != null)
-                          Positioned(
-                            right: -30,
-                            top: -40,
-                            child: Column(
-                              children: [
-                                const Text("Color",
-                                    style: TextStyle(
-                                        color: Colors.white54, fontSize: 10)),
-                                const SizedBox(height: 4),
-                                Container(
-                                  width: 28,
-                                  height: 28,
-                                  decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color:
-                                          _getCardColor(gameState.currentColor),
-                                      border: Border.all(
-                                          color: Colors.white, width: 2),
-                                      boxShadow: [
-                                        BoxShadow(
-                                            color: _getCardColor(
-                                                    gameState.currentColor)
-                                                .withValues(alpha: 0.5),
-                                            blurRadius: 8)
-                                      ]),
-                                ),
-                              ],
-                            ),
-                          ),
-                      ],
-                    ),
-                  ),
+                  child:
+                      _buildCenterPile(gameState, room, currentUser, isMyTurn),
                 ),
 
-                // --- Current Turn Feedback (Center) ---
-                // if (gameState.currentPlayerId == currentUser?.id)
-                //   Positioned(
-                //       top: size.height * 0.45,
-                //       left: 0,
-                //       right: 0,
-                //       child: Center(
-                //         child: IgnorePointer(
-                //           child: Container(
-                //             padding: const EdgeInsets.symmetric(
-                //                 horizontal: 16, vertical: 6),
-                //             decoration: BoxDecoration(
-                //               color: Colors.black54,
-                //               borderRadius: BorderRadius.circular(20),
-                //               border: Border.all(color: Colors.green, width: 1),
-                //             ),
-                //             child: const Text("Your Turn",
-                //                 style: TextStyle(
-                //                     color: Colors.green,
-                //                     fontWeight: FontWeight.bold)),
-                //           ),
-                //         ),
-                //       )),
-
                 // --- My Player Area (Bottom) ---
-                // Cards on TOP, Profile & Uno Button BELOW
                 Positioned(
-                  bottom: 20,
+                  bottom: 0,
                   left: 0,
                   right: 0,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      // My Hand
-                      SizedBox(
-                        height: 150,
-                        child: SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          padding: const EdgeInsets.symmetric(horizontal: 20),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: (myPlayer.hand ?? []).map((card) {
-                              return Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 4.0),
-                                child: UnoCardWidget(
-                                  card: card,
-                                  width: 80,
-                                  height: 120,
-                                  onTap: () => _handleCardPlay(
-                                      context, ref, room, currentUser!, card),
-                                ),
-                              );
-                            }).toList(),
-                          ),
-                        ),
-                      ),
-
-                      const SizedBox(height: 10),
-
-                      // Profile & Controls Row
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 40.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            // Spacer to center Avatar if needed, or use MainAxisAlignment.center
-                            // Using spaceBetween for distributed look as requested?
-                            // Let's use Center with spacing
-                            const Spacer(),
-
-                            // My Avatar
-                            _PlayerAvatar(
-                              player: myPlayer,
-                              isCurrentUser: true,
-                              isActive:
-                                  gameState.currentPlayerId == myPlayer.id,
-                            ),
-
-                            const SizedBox(width: 40),
-
-                            // UNO Button
-                            GestureDetector(
-                              onTap: () => _handleCallUno(
-                                  context, ref, room, currentUser!),
-                              child: Container(
-                                width: 60,
-                                height: 60,
-                                decoration: const BoxDecoration(
-                                  color: AppTheme.unoRed,
-                                  shape: BoxShape.circle,
-                                  boxShadow: [
-                                    BoxShadow(
-                                        color: Colors.black45,
-                                        blurRadius: 4,
-                                        offset: Offset(0, 2))
-                                  ],
-                                ),
-                                alignment: Alignment.center,
-                                child: const Text("UNO!",
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 16)),
-                              ),
-                            ),
-
-                            const Spacer(),
-                          ],
-                        ),
-                      ),
-                    ],
+                  child: _buildMyPlayerArea(
+                    context,
+                    myPlayer,
+                    room,
+                    currentUser,
+                    gameState,
+                    isMyTurn,
                   ),
                 ),
               ],
@@ -321,6 +176,260 @@ class _GameScreenState extends ConsumerState<GameScreen> {
         error: (err, stack) => Center(
             child: Text('Error: $err',
                 style: const TextStyle(color: Colors.white))),
+      ),
+    );
+  }
+
+  Widget _buildCenterPile(
+      dynamic gameState, GameRoom room, dynamic currentUser, bool isMyTurn) {
+    return Container(
+      width: 300,
+      height: 200,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20),
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            Colors.white.withValues(alpha: 0.05),
+            Colors.white.withValues(alpha: 0.02),
+          ],
+        ),
+      ),
+      child: Stack(
+        clipBehavior: Clip.none,
+        alignment: Alignment.center,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              // Draw Pile with pulse animation
+              AnimatedBuilder(
+                animation: _pulseController,
+                builder: (context, child) {
+                  final scale =
+                      isMyTurn ? 1.0 + (_pulseController.value * 0.05) : 1.0;
+                  return Transform.scale(
+                    scale: scale,
+                    child: GestureDetector(
+                      onTap: () {
+                        if (isMyTurn) {
+                          ref
+                              .read(gameRepositoryProvider)
+                              .drawCard(room.id, currentUser!.id);
+                        }
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12),
+                          boxShadow: isMyTurn
+                              ? [
+                                  BoxShadow(
+                                    color: Colors.blue.withValues(alpha: 0.4),
+                                    blurRadius: 15,
+                                    spreadRadius: 2,
+                                  )
+                                ]
+                              : [
+                                  BoxShadow(
+                                    color: Colors.black.withValues(alpha: 0.3),
+                                    blurRadius: 8,
+                                    offset: const Offset(0, 4),
+                                  )
+                                ],
+                        ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(12),
+                          child: Image.asset(
+                            'docs/cards-assets/uno_deck.png',
+                            width: 100,
+                            height: 150,
+                            fit: BoxFit.contain,
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
+
+              const SizedBox(width: 40),
+
+              // Discard Pile with rotation animation
+              if (gameState.topCard != null)
+                TweenAnimationBuilder<double>(
+                  tween: Tween(begin: 0.0, end: 0.1),
+                  duration: const Duration(milliseconds: 300),
+                  builder: (context, angle, child) {
+                    return Transform.rotate(
+                      angle: 0,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12),
+                          boxShadow: [
+                            BoxShadow(
+                              color: _getCardColor(gameState.currentColor)
+                                  .withValues(alpha: 0.5),
+                              blurRadius: 20,
+                              spreadRadius: 2,
+                            ),
+                            BoxShadow(
+                              color: Colors.black.withValues(alpha: 0.4),
+                              blurRadius: 8,
+                              offset: const Offset(0, 4),
+                            ),
+                          ],
+                        ),
+                        child: UnoCardWidget(
+                          card: gameState.topCard,
+                          width: 110,
+                          height: 165,
+                        ),
+                      ),
+                    );
+                  },
+                ),
+            ],
+          ),
+
+          // Enhanced Color Indicator
+          if (gameState.topCard != null)
+            Positioned(
+              right: -20,
+              top: -60,
+              child: Column(
+                children: [
+                  Text(
+                    "COLOR",
+                    style: TextStyle(
+                      color: Colors.white.withValues(alpha: 0.6),
+                      fontSize: 10,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 1.2,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Container(
+                    width: 36,
+                    height: 36,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: _getCardColor(gameState.currentColor),
+                      border: Border.all(color: Colors.white, width: 3),
+                      boxShadow: [
+                        BoxShadow(
+                          color: _getCardColor(gameState.currentColor)
+                              .withValues(alpha: 0.6),
+                          blurRadius: 15,
+                          spreadRadius: 3,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildMyPlayerArea(
+    BuildContext context,
+    Player myPlayer,
+    GameRoom room,
+    dynamic currentUser,
+    dynamic gameState,
+    bool isMyTurn,
+  ) {
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            Colors.transparent,
+            Colors.black.withValues(alpha: 0.4),
+          ],
+        ),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // My Hand with enhanced animations
+          SizedBox(
+            height: 160,
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: (myPlayer.hand ?? []).asMap().entries.map((entry) {
+                  final index = entry.key;
+                  final card = entry.value;
+                  final delay = index * 50;
+
+                  return TweenAnimationBuilder<double>(
+                    tween: Tween(begin: 0.0, end: 1.0),
+                    duration: Duration(milliseconds: 300 + delay),
+                    curve: Curves.easeOutBack,
+                    builder: (context, value, child) {
+                      return Transform.translate(
+                        offset: Offset(0, 20 * (1 - value)),
+                        child: Opacity(
+                          opacity: value,
+                          child: Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 4.0),
+                            child: _AnimatedCard(
+                              card: card,
+                              onTap: isMyTurn
+                                  ? () => _handleCardPlay(
+                                      context, ref, room, currentUser!, card)
+                                  : null,
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                }).toList(),
+              ),
+            ),
+          ),
+
+          const SizedBox(height: 20),
+
+          // Bottom Section: Profile Center, UNO Button Right
+          Padding(
+            padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+            child: SizedBox(
+              width: double.infinity,
+              child: Stack(
+                alignment: Alignment.center,
+                clipBehavior: Clip.none,
+                children: [
+                  // Profile Avatar (Center)
+                  _PlayerAvatar(
+                    player: myPlayer,
+                    isCurrentUser: true,
+                    isActive: isMyTurn,
+                  ),
+
+                  // UNO Button (Bottom Right)
+                  Positioned(
+                    right: 0,
+                    bottom: 0,
+                    child: _UnoButton(
+                      onTap: () =>
+                          _handleCallUno(context, ref, room, currentUser!),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -339,10 +448,10 @@ class _GameScreenState extends ConsumerState<GameScreen> {
         alignment = Alignment.topCenter;
         break;
       case _OpponentPosition.left:
-        alignment = const Alignment(-0.9, -0.5);
+        alignment = const Alignment(-0.9, -0.4);
         break;
       case _OpponentPosition.right:
-        alignment = const Alignment(0.9, -0.5);
+        alignment = const Alignment(0.9, -0.4);
         break;
     }
 
@@ -391,10 +500,23 @@ class _GameScreenState extends ConsumerState<GameScreen> {
       GameRoom room, Player currentUser) async {
     await ref.read(gameRepositoryProvider).callUno(room.id, currentUser.id);
     if (context.mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text("UNO Called!"),
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: const Row(
+            children: [
+              Icon(Icons.check_circle, color: Colors.white),
+              SizedBox(width: 12),
+              Text("UNO Called!",
+                  style: TextStyle(fontWeight: FontWeight.bold)),
+            ],
+          ),
           backgroundColor: AppTheme.unoRed,
-          duration: Duration(seconds: 1)));
+          behavior: SnackBarBehavior.floating,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          duration: const Duration(seconds: 2),
+        ),
+      );
     }
   }
 
@@ -417,23 +539,49 @@ class _GameScreenState extends ConsumerState<GameScreen> {
     return showDialog<CardColor>(
       context: context,
       barrierDismissible: false,
-      builder: (context) => AlertDialog(
-        backgroundColor: Colors.grey[900],
-        title:
-            const Text('Choose Color', style: TextStyle(color: Colors.white)),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
-              _buildColorBtn(context, CardColor.red, AppTheme.unoRed),
-              _buildColorBtn(context, CardColor.blue, AppTheme.unoBlue),
-            ]),
-            const SizedBox(height: 16),
-            Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
-              _buildColorBtn(context, CardColor.green, AppTheme.unoGreen),
-              _buildColorBtn(context, CardColor.yellow, AppTheme.unoYellow),
-            ]),
-          ],
+      builder: (context) => Dialog(
+        backgroundColor: Colors.transparent,
+        child: Container(
+          padding: const EdgeInsets.all(24),
+          decoration: BoxDecoration(
+            color: const Color(0xFF2A2A2A),
+            borderRadius: BorderRadius.circular(20),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.5),
+                blurRadius: 20,
+              ),
+            ],
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text(
+                'Choose Color',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 24),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  _buildColorBtn(context, CardColor.red, AppTheme.unoRed),
+                  _buildColorBtn(context, CardColor.blue, AppTheme.unoBlue),
+                ],
+              ),
+              const SizedBox(height: 16),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  _buildColorBtn(context, CardColor.green, AppTheme.unoGreen),
+                  _buildColorBtn(context, CardColor.yellow, AppTheme.unoYellow),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -443,18 +591,171 @@ class _GameScreenState extends ConsumerState<GameScreen> {
     return GestureDetector(
       onTap: () => Navigator.pop(context, c),
       child: Container(
-          width: 50,
-          height: 50,
-          decoration: BoxDecoration(
-              color: color,
-              shape: BoxShape.circle,
-              border: Border.all(color: Colors.white, width: 2))),
+        width: 60,
+        height: 60,
+        decoration: BoxDecoration(
+          color: color,
+          shape: BoxShape.circle,
+          border: Border.all(color: Colors.white, width: 3),
+          boxShadow: [
+            BoxShadow(
+              color: color.withValues(alpha: 0.5),
+              blurRadius: 12,
+              spreadRadius: 2,
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
 
 enum _OpponentPosition { top, left, right }
 
+// Enhanced Animated Card Widget
+class _AnimatedCard extends StatefulWidget {
+  final UnoCard card;
+  final VoidCallback? onTap;
+
+  const _AnimatedCard({
+    required this.card,
+    this.onTap,
+  });
+
+  @override
+  State<_AnimatedCard> createState() => _AnimatedCardState();
+}
+
+class _AnimatedCardState extends State<_AnimatedCard>
+    with SingleTickerProviderStateMixin {
+  bool _isPressed = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTapDown: widget.onTap != null
+          ? (_) => setState(() => _isPressed = true)
+          : null,
+      onTapUp: (_) => setState(() => _isPressed = false),
+      onTapCancel: () => setState(() => _isPressed = false),
+      onTap: widget.onTap,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 150),
+        transform: Matrix4.identity()
+          ..translate(0.0, _isPressed ? 10.0 : 0.0)
+          ..scale(_isPressed ? 0.95 : 1.0),
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            boxShadow: _isPressed
+                ? []
+                : [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.4),
+                      blurRadius: 8,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+          ),
+          child: UnoCardWidget(
+            card: widget.card,
+            width: 80,
+            height: 120,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// Enhanced UNO Button
+class _UnoButton extends StatefulWidget {
+  final VoidCallback onTap;
+
+  const _UnoButton({required this.onTap});
+
+  @override
+  State<_UnoButton> createState() => _UnoButtonState();
+}
+
+class _UnoButtonState extends State<_UnoButton>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _scaleAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1000),
+    )..repeat(reverse: true);
+
+    _scaleAnimation = Tween<double>(begin: 1.0, end: 1.1).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
+    );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _scaleAnimation,
+      builder: (context, child) {
+        return Transform.scale(
+          scale: _scaleAnimation.value,
+          child: GestureDetector(
+            onTap: widget.onTap,
+            child: Container(
+              width: 70,
+              height: 70,
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    AppTheme.unoRed,
+                    Color(0xFFB71C1C),
+                  ],
+                ),
+                shape: BoxShape.circle,
+                boxShadow: [
+                  BoxShadow(
+                    color: AppTheme.unoRed.withValues(alpha: 0.6),
+                    blurRadius: 20,
+                    spreadRadius: 2,
+                  ),
+                  const BoxShadow(
+                    color: Colors.black45,
+                    blurRadius: 8,
+                    offset: Offset(0, 4),
+                  ),
+                ],
+              ),
+              alignment: Alignment.center,
+              child: const Text(
+                "UNO!",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18,
+                  letterSpacing: 1.5,
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
+
+// Enhanced Player Avatar
 class _PlayerAvatar extends StatelessWidget {
   final Player player;
   final bool isCurrentUser;
@@ -474,60 +775,111 @@ class _PlayerAvatar extends StatelessWidget {
         Stack(
           clipBehavior: Clip.none,
           children: [
-            // Avatar Circle
+            // Avatar Circle with enhanced styling
             Container(
-              padding: const EdgeInsets.all(3), // Border gap
+              padding: const EdgeInsets.all(4),
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
+                gradient: isActive
+                    ? const LinearGradient(
+                        colors: [Colors.green, Colors.lightGreenAccent],
+                      )
+                    : null,
                 border: Border.all(
-                  color: isActive ? Colors.green : Colors.transparent,
-                  width: 3,
+                  color: isActive ? Colors.transparent : Colors.white24,
+                  width: 2,
                 ),
                 boxShadow: isActive
                     ? [
-                        const BoxShadow(
-                            color: Colors.green,
-                            blurRadius: 10,
-                            spreadRadius: 1)
+                        BoxShadow(
+                          color: Colors.green.withValues(alpha: 0.6),
+                          blurRadius: 20,
+                          spreadRadius: 3,
+                        )
                       ]
-                    : [],
+                    : [
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.3),
+                          blurRadius: 8,
+                          offset: const Offset(0, 2),
+                        )
+                      ],
               ),
-              child: CircleAvatar(
-                radius: isCurrentUser ? 30 : 25,
-                backgroundColor: Colors.grey[800],
-                // No background image, defaulting to icon
-                child: const Icon(Icons.person, color: Colors.white70),
+              child: Container(
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      Colors.grey[800]!,
+                      Colors.grey[900]!,
+                    ],
+                  ),
+                ),
+                child: CircleAvatar(
+                  radius: isCurrentUser ? 32 : 28,
+                  backgroundColor: Colors.transparent,
+                  child: Icon(
+                    Icons.person,
+                    color: Colors.white70,
+                    size: isCurrentUser ? 32 : 28,
+                  ),
+                ),
               ),
             ),
 
             // Card Count Badge (Top Right)
             if (!isCurrentUser)
               Positioned(
-                right: -4,
-                top: -4,
+                right: -6,
+                top: -6,
                 child: Container(
-                  padding: const EdgeInsets.all(6),
-                  decoration: const BoxDecoration(
-                    color: Colors.white,
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    gradient: const LinearGradient(
+                      colors: [Colors.white, Colors.grey],
+                    ),
                     shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.3),
+                        blurRadius: 4,
+                      ),
+                    ],
                   ),
                   child: Text(
                     '${player.cardCount}',
                     style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 12,
-                        color: Colors.black),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 12,
+                      color: Colors.black,
+                    ),
                   ),
                 ),
               ),
           ],
         ),
-        const SizedBox(height: 8),
-        Text(
-          isCurrentUser ? 'You (${player.name})' : player.name,
-          style: const TextStyle(
-              color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14),
-        )
+        const SizedBox(height: 10),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+          decoration: BoxDecoration(
+            color: Colors.black26,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+              color: isActive ? Colors.green : Colors.white12,
+              width: 1,
+            ),
+          ),
+          child: Text(
+            isCurrentUser ? 'You (${player.name})' : player.name,
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              fontSize: isCurrentUser ? 14 : 12,
+            ),
+          ),
+        ),
       ],
     );
   }
