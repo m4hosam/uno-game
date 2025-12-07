@@ -176,12 +176,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   }
 
   Future<void> _handleNavigation(Widget targetScreen) async {
-    final l10n = AppLocalizations.of(context)!;
+    // Basic validtion
     if (_nameController.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-            content: Text(
-                'Please enter your name')), // using hardcoded string if l10n fails or use l10n.enterName
+        const SnackBar(content: Text('Please enter your name')),
       );
       return;
     }
