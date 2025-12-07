@@ -166,8 +166,8 @@ class _GameScreenState extends ConsumerState<GameScreen> {
                         // Color Indicator (Relative to Discard Pile)
                         if (gameState.topCard != null)
                           Positioned(
-                            right: 10,
-                            top: 0,
+                            right: -30,
+                            top: -40,
                             child: Column(
                               children: [
                                 const Text("Color",
@@ -201,118 +201,118 @@ class _GameScreenState extends ConsumerState<GameScreen> {
 
                 // --- Current Turn Feedback (Center) ---
                 if (gameState.currentPlayerId == currentUser?.id)
+                  // Positioned(
+                  //     top: size.height * 0.45,
+                  //     left: 0,
+                  //     right: 0,
+                  //     child: Center(
+                  //       child: IgnorePointer(
+                  //         child: Container(
+                  //           padding: const EdgeInsets.symmetric(
+                  //               horizontal: 16, vertical: 6),
+                  //           decoration: BoxDecoration(
+                  //             color: Colors.black54,
+                  //             borderRadius: BorderRadius.circular(20),
+                  //             border: Border.all(color: Colors.green, width: 1),
+                  //           ),
+                  //           child: const Text("Your Turn",
+                  //               style: TextStyle(
+                  //                   color: Colors.green,
+                  //                   fontWeight: FontWeight.bold)),
+                  //         ),
+                  //       ),
+                  //     )),
+
+                  // --- My Player Area (Bottom) ---
+                  // Cards on TOP, Profile & Uno Button BELOW
                   Positioned(
-                      top: size.height * 0.45,
-                      left: 0,
-                      right: 0,
-                      child: Center(
-                        child: IgnorePointer(
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 16, vertical: 6),
-                            decoration: BoxDecoration(
-                              color: Colors.black54,
-                              borderRadius: BorderRadius.circular(20),
-                              border: Border.all(color: Colors.green, width: 1),
+                    bottom: 20,
+                    left: 0,
+                    right: 0,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        // My Hand
+                        SizedBox(
+                          height: 150,
+                          child: SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: (myPlayer.hand ?? []).map((card) {
+                                return Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 4.0),
+                                  child: UnoCardWidget(
+                                    card: card,
+                                    width: 80,
+                                    height: 120,
+                                    onTap: () => _handleCardPlay(
+                                        context, ref, room, currentUser!, card),
+                                  ),
+                                );
+                              }).toList(),
                             ),
-                            child: const Text("Your Turn",
-                                style: TextStyle(
-                                    color: Colors.green,
-                                    fontWeight: FontWeight.bold)),
                           ),
                         ),
-                      )),
 
-                // --- My Player Area (Bottom) ---
-                // Cards on TOP, Profile & Uno Button BELOW
-                Positioned(
-                  bottom: 20,
-                  left: 0,
-                  right: 0,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      // My Hand
-                      SizedBox(
-                        height: 150,
-                        child: SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                        const SizedBox(height: 10),
+
+                        // Profile & Controls Row
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 40.0),
                           child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: (myPlayer.hand ?? []).map((card) {
-                              return Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 4.0),
-                                child: UnoCardWidget(
-                                  card: card,
-                                  width: 80,
-                                  height: 120,
-                                  onTap: () => _handleCardPlay(
-                                      context, ref, room, currentUser!, card),
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              // Spacer to center Avatar if needed, or use MainAxisAlignment.center
+                              // Using spaceBetween for distributed look as requested?
+                              // Let's use Center with spacing
+                              const Spacer(),
+
+                              // My Avatar
+                              _PlayerAvatar(
+                                player: myPlayer,
+                                isCurrentUser: true,
+                                isActive:
+                                    gameState.currentPlayerId == myPlayer.id,
+                              ),
+
+                              const SizedBox(width: 40),
+
+                              // UNO Button
+                              GestureDetector(
+                                onTap: () => _handleCallUno(
+                                    context, ref, room, currentUser!),
+                                child: Container(
+                                  width: 60,
+                                  height: 60,
+                                  decoration: const BoxDecoration(
+                                    color: AppTheme.unoRed,
+                                    shape: BoxShape.circle,
+                                    boxShadow: [
+                                      BoxShadow(
+                                          color: Colors.black45,
+                                          blurRadius: 4,
+                                          offset: Offset(0, 2))
+                                    ],
+                                  ),
+                                  alignment: Alignment.center,
+                                  child: const Text("UNO!",
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16)),
                                 ),
-                              );
-                            }).toList(),
+                              ),
+
+                              const Spacer(),
+                            ],
                           ),
                         ),
-                      ),
-
-                      const SizedBox(height: 10),
-
-                      // Profile & Controls Row
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 40.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            // Spacer to center Avatar if needed, or use MainAxisAlignment.center
-                            // Using spaceBetween for distributed look as requested?
-                            // Let's use Center with spacing
-                            const Spacer(),
-
-                            // My Avatar
-                            _PlayerAvatar(
-                              player: myPlayer,
-                              isCurrentUser: true,
-                              isActive:
-                                  gameState.currentPlayerId == myPlayer.id,
-                            ),
-
-                            const SizedBox(width: 40),
-
-                            // UNO Button
-                            GestureDetector(
-                              onTap: () => _handleCallUno(
-                                  context, ref, room, currentUser!),
-                              child: Container(
-                                width: 60,
-                                height: 60,
-                                decoration: const BoxDecoration(
-                                  color: AppTheme.unoRed,
-                                  shape: BoxShape.circle,
-                                  boxShadow: [
-                                    BoxShadow(
-                                        color: Colors.black45,
-                                        blurRadius: 4,
-                                        offset: Offset(0, 2))
-                                  ],
-                                ),
-                                alignment: Alignment.center,
-                                child: const Text("UNO!",
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 16)),
-                              ),
-                            ),
-
-                            const Spacer(),
-                          ],
-                        ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
               ],
             ),
           );
