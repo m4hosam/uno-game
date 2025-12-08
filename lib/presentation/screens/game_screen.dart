@@ -7,6 +7,7 @@ import '../../data/models/player_model.dart';
 import '../../data/models/game_room_model.dart';
 import '../widgets/uno_card_widget.dart';
 import '../providers/game_providers.dart';
+import '../../data/services/game_logic_service.dart';
 import 'game_over_screen.dart';
 
 class GameScreen extends ConsumerStatefulWidget {
@@ -49,6 +50,7 @@ class _GameScreenState extends ConsumerState<GameScreen>
     final size = MediaQuery.of(context).size;
     final roomAsync = ref.watch(roomStreamProvider);
     final currentUserAsync = ref.watch(currentUserProvider);
+    final gameLogic = ref.watch(gameLogicServiceProvider);
 
     return Scaffold(
       backgroundColor: const Color(0xFF1E1111),
@@ -157,6 +159,16 @@ class _GameScreenState extends ConsumerState<GameScreen>
                   child:
                       _buildCenterPile(gameState, room, currentUser, isMyTurn),
                 ),
+
+                // Draw Hint
+                if (isMyTurn)
+                  Align(
+                    alignment: const Alignment(0, 0.14),
+                    child: _buildDrawHint(
+                      !(myPlayer.hand ?? []).any((c) => gameLogic.canPlayCard(
+                          c, gameState.topCard, gameState.currentColor)),
+                    ),
+                  ),
 
                 // --- My Player Area (Bottom) ---
                 Positioned(
@@ -607,6 +619,59 @@ class _GameScreenState extends ConsumerState<GameScreen>
               spreadRadius: 2,
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDrawHint(bool show) {
+    return AnimatedOpacity(
+      opacity: show ? 1.0 : 0.0,
+      duration: const Duration(milliseconds: 300),
+      child: IgnorePointer(
+        ignoring: !show,
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
+          decoration: BoxDecoration(
+            color: Colors.black.withValues(alpha: 0.8),
+            borderRadius: BorderRadius.circular(30),
+            border: Border.all(
+              color: AppTheme.unoYellow.withValues(alpha: 0.8),
+              width: 2,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: AppTheme.unoYellow.withValues(alpha: 0.3),
+                blurRadius: 15,
+                spreadRadius: 2,
+              ),
+            ],
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Icon(
+                Icons.arrow_upward_rounded,
+                color: AppTheme.unoYellow,
+                size: 15,
+              ),
+              const SizedBox(width: 9),
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "No Playable Cards! Draw a card.",
+                    style: const TextStyle(
+                      color: AppTheme.unoYellow,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 9,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
