@@ -9,13 +9,23 @@ import 'presentation/screens/welcome_screen.dart';
 import 'presentation/providers/settings_provider.dart';
 import 'firebase_options.dart';
 
+import 'presentation/screens/home_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  runApp(const ProviderScope(child: UnoApp()));
+  final prefs = await SharedPreferences.getInstance();
+
+  runApp(ProviderScope(
+    overrides: [
+      sharedPreferencesProvider.overrideWithValue(prefs),
+    ],
+    child: const UnoApp(),
+  ));
 }
 
 class UnoApp extends ConsumerWidget {
@@ -25,6 +35,8 @@ class UnoApp extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final themeMode = ref.watch(themeProvider);
     final locale = ref.watch(localeProvider);
+
+    final hasSeenWelcome = ref.watch(hasSeenWelcomeProvider);
 
     return MaterialApp(
       title: AppConstants.appName,
@@ -43,7 +55,7 @@ class UnoApp extends ConsumerWidget {
         Locale('en'), // English
         Locale('ar'), // Arabic
       ],
-      home: const WelcomeScreen(),
+      home: hasSeenWelcome ? const HomeScreen() : const WelcomeScreen(),
     );
   }
 }

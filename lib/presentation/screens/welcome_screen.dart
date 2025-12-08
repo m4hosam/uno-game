@@ -87,6 +87,7 @@ class WelcomeScreen extends ConsumerWidget {
                         ref
                             .read(localeProvider.notifier)
                             .setLocale(const Locale('en'));
+                        ref.read(hasSeenWelcomeProvider.notifier).setSeen();
                         _navigateToHome(context);
                       },
                       style: ElevatedButton.styleFrom(
@@ -110,6 +111,7 @@ class WelcomeScreen extends ConsumerWidget {
                         ref
                             .read(localeProvider.notifier)
                             .setLocale(const Locale('ar'));
+                        ref.read(hasSeenWelcomeProvider.notifier).setSeen();
                         _navigateToHome(context);
                       },
                       style: ElevatedButton.styleFrom(
