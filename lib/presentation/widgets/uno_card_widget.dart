@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:animate_do/animate_do.dart';
+
 import '../../data/models/card_model.dart';
 
 class UnoCardWidget extends StatelessWidget {
@@ -38,8 +38,7 @@ class UnoCardWidget extends StatelessWidget {
           ],
         ),
         child: card != null
-            ? ZoomIn(
-                child: Image.asset(_getAssetPath(card!), fit: BoxFit.contain))
+            ? Image.asset(_getAssetPath(card!), fit: BoxFit.contain)
             : Image.asset('docs/cards-assets/uno_deck.png',
                 fit: BoxFit.contain),
       ),

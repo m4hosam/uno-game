@@ -368,15 +368,13 @@ class _GameScreenState extends ConsumerState<GameScreen>
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.end,
-                children: (myPlayer.hand ?? []).asMap().entries.map((entry) {
-                  final index = entry.key;
-                  final card = entry.value;
-                  final delay = index * 50;
+                children: (myPlayer.hand ?? []).map((card) {
+                  // Removed delay for instant feedback
 
                   return TweenAnimationBuilder<double>(
                     key: ValueKey(card.id),
                     tween: Tween(begin: 0.0, end: 1.0),
-                    duration: Duration(milliseconds: 300 + delay),
+                    duration: const Duration(milliseconds: 100),
                     curve: Curves.easeOutBack,
                     builder: (context, value, child) {
                       return Transform.translate(
