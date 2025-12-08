@@ -374,6 +374,7 @@ class _GameScreenState extends ConsumerState<GameScreen>
                   final delay = index * 50;
 
                   return TweenAnimationBuilder<double>(
+                    key: ValueKey(card.id),
                     tween: Tween(begin: 0.0, end: 1.0),
                     duration: Duration(milliseconds: 300 + delay),
                     curve: Curves.easeOutBack,

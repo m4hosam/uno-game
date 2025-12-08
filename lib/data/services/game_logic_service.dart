@@ -10,8 +10,10 @@ class GameLogicService {
 
     // Helper to add card
     void addCard(CardColor color, CardType type, {int? value}) {
+      final uniqueId =
+          '${DateTime.now().microsecondsSinceEpoch}_${Random().nextInt(10000)}_${idCounter++}';
       deck.add(UnoCard(
-        id: '${idCounter++}',
+        id: uniqueId,
         color: color,
         type: type,
         value: value,
