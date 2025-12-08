@@ -105,7 +105,7 @@ class _JoinRoomScreenState extends ConsumerState<JoinRoomScreen> {
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
-          'Join Game Channel', // Matches design text
+          l10n.joinGameChannel, // Matches design text
           style:
               const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
@@ -123,7 +123,7 @@ class _JoinRoomScreenState extends ConsumerState<JoinRoomScreen> {
               children: [
                 const SizedBox(height: 20),
 
-                Text('Join a Game Channel',
+                Text(l10n.joinGameTitle,
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 24,
@@ -133,13 +133,13 @@ class _JoinRoomScreenState extends ConsumerState<JoinRoomScreen> {
                 const SizedBox(height: 32),
 
                 // Server Name
-                Text('Server Name', style: headerStyle),
+                Text(l10n.serverNameHeader, style: headerStyle),
                 const SizedBox(height: 8),
                 TextFormField(
                   controller: _roomCodeController,
                   style: const TextStyle(color: Colors.white),
                   decoration: inputDecoration.copyWith(
-                    hintText: 'e.g., "Ahmed\'s Game"',
+                    hintText: l10n.roomCodeHint,
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -152,13 +152,13 @@ class _JoinRoomScreenState extends ConsumerState<JoinRoomScreen> {
                 const SizedBox(height: 24),
 
                 // Password
-                Text('Password', style: headerStyle),
+                Text(l10n.passwordHeader, style: headerStyle),
                 const SizedBox(height: 8),
                 TextFormField(
                   controller: _passwordController,
                   style: const TextStyle(color: Colors.white),
                   decoration: inputDecoration.copyWith(
-                    hintText: 'Enter password',
+                    hintText: l10n.enterPasswordHint,
                     suffixIcon:
                         const Icon(Icons.remove_red_eye, color: Colors.white38),
                   ),
@@ -184,7 +184,7 @@ class _JoinRoomScreenState extends ConsumerState<JoinRoomScreen> {
                     child: _isLoading
                         ? const CircularProgressIndicator(color: Colors.white)
                         : Text(
-                            'Join', // "Join"
+                            l10n.join, // "Join"
                             style: const TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,

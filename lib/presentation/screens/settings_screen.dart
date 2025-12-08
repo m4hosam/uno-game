@@ -14,14 +14,14 @@ class SettingsScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Settings'),
+        title: Text(l10n.settings),
       ),
       body: SafeArea(
         child: ListView(
           children: [
-            _buildSectionHeader(context, 'Theme'),
+            _buildSectionHeader(context, l10n.theme),
             RadioListTile<ThemeMode>(
-              title: const Text('System Default'),
+              title: Text(l10n.systemDefault),
               value: ThemeMode.system,
               groupValue: currentTheme,
               onChanged: (value) {
@@ -31,7 +31,7 @@ class SettingsScreen extends ConsumerWidget {
               },
             ),
             RadioListTile<ThemeMode>(
-              title: const Text('Light Theme'),
+              title: Text(l10n.lightTheme),
               value: ThemeMode.light,
               groupValue: currentTheme,
               onChanged: (value) {
@@ -41,7 +41,7 @@ class SettingsScreen extends ConsumerWidget {
               },
             ),
             RadioListTile<ThemeMode>(
-              title: const Text('Dark Theme'),
+              title: Text(l10n.darkTheme),
               value: ThemeMode.dark,
               groupValue: currentTheme,
               onChanged: (value) {
@@ -51,9 +51,9 @@ class SettingsScreen extends ConsumerWidget {
               },
             ),
             const Divider(),
-            _buildSectionHeader(context, 'Language'),
+            _buildSectionHeader(context, l10n.language),
             RadioListTile<Locale>(
-              title: const Text('English'),
+              title: Text(l10n.english),
               value: const Locale('en'),
               groupValue: currentLocale,
               onChanged: (value) {
@@ -63,7 +63,7 @@ class SettingsScreen extends ConsumerWidget {
               },
             ),
             RadioListTile<Locale>(
-              title: const Text('العربية'),
+              title: Text(l10n.arabic),
               value: const Locale('ar'),
               groupValue: currentLocale,
               onChanged: (value) {

@@ -86,7 +86,7 @@ class _CreateRoomScreenState extends ConsumerState<CreateRoomScreen> {
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
-          'Create Game Channel',
+          l10n.createGameChannel,
           style:
               const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
@@ -126,13 +126,13 @@ class _CreateRoomScreenState extends ConsumerState<CreateRoomScreen> {
                 const SizedBox(height: 48),
 
                 // Server Name Input
-                Text('Server Name', style: headerStyle),
+                Text(l10n.serverNameHeader, style: headerStyle),
                 const SizedBox(height: 8),
                 TextFormField(
                   controller: _nameController,
                   style: const TextStyle(color: Colors.white),
                   decoration: InputDecoration(
-                    hintText: 'Ahmed\'s Uno Night',
+                    hintText: l10n.roomNameHint,
                     hintStyle:
                         TextStyle(color: Colors.white.withValues(alpha: 0.3)),
                     filled: true,
@@ -154,13 +154,13 @@ class _CreateRoomScreenState extends ConsumerState<CreateRoomScreen> {
                 const SizedBox(height: 24),
 
                 // Password Input
-                Text('Password (optional)', style: headerStyle),
+                Text(l10n.passwordOptionalHeader, style: headerStyle),
                 const SizedBox(height: 8),
                 TextFormField(
                   controller: _passwordController,
                   style: const TextStyle(color: Colors.white),
                   decoration: InputDecoration(
-                    hintText: 'Leave blank for public game',
+                    hintText: l10n.publicGameHint,
                     hintStyle: TextStyle(color: Colors.white.withOpacity(0.3)),
                     filled: true,
                     fillColor: const Color(0xFF2C2C2E),

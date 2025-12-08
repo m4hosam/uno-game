@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:animate_do/animate_do.dart';
+import '../../l10n/app_localizations.dart';
 import '../../core/theme/app_theme.dart';
 import '../providers/settings_provider.dart';
 import 'home_screen.dart';
@@ -10,6 +11,7 @@ class WelcomeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
@@ -50,9 +52,9 @@ class WelcomeScreen extends ConsumerWidget {
                 // Welcome Text
                 FadeInUp(
                   delay: const Duration(milliseconds: 200),
-                  child: const Text(
-                    'Welcome!',
-                    style: TextStyle(
+                  child: Text(
+                    l10n.welcomeTitle,
+                    style: const TextStyle(
                       fontSize: 32,
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
@@ -65,7 +67,7 @@ class WelcomeScreen extends ConsumerWidget {
                 FadeInUp(
                   delay: const Duration(milliseconds: 300),
                   child: Text(
-                    'Choose your language',
+                    l10n.chooseLanguage,
                     style: TextStyle(
                       fontSize: 16,
                       color: Colors.white.withValues(alpha: 0.7),
@@ -91,7 +93,7 @@ class WelcomeScreen extends ConsumerWidget {
                         backgroundColor: AppTheme.unoRed,
                         foregroundColor: Colors.white,
                       ),
-                      child: const Text('English'),
+                      child: Text(l10n.english),
                     ),
                   ),
                 ),
@@ -115,7 +117,7 @@ class WelcomeScreen extends ConsumerWidget {
                             0xFF374151), // Dark Grey for secondary option
                         foregroundColor: Colors.white,
                       ),
-                      child: const Text('العربية'),
+                      child: Text(l10n.arabic),
                     ),
                   ),
                 ),
@@ -126,7 +128,7 @@ class WelcomeScreen extends ConsumerWidget {
                 FadeInUp(
                   delay: const Duration(milliseconds: 600),
                   child: Text(
-                    'Your language preference will be saved.',
+                    l10n.languageSaved,
                     style: TextStyle(
                       fontSize: 12,
                       color: Colors.white.withValues(alpha: 0.3),

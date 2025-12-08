@@ -103,4 +103,94 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get gameOver => 'Game Over';
+
+  @override
+  String get welcomeTitle => 'Welcome!';
+
+  @override
+  String get chooseLanguage => 'Choose your language';
+
+  @override
+  String get languageSaved => 'Your language preference will be saved.';
+
+  @override
+  String get readyToPlay => 'Ready to Play?';
+
+  @override
+  String get enterNameHint => 'Enter your name';
+
+  @override
+  String get pleaseEnterName => 'Please enter your name';
+
+  @override
+  String get createGameChannel => 'Create Game Channel';
+
+  @override
+  String get serverNameHeader => 'Server Name';
+
+  @override
+  String get roomNameHint => 'e.g., Ahmed\'s Uno Night';
+
+  @override
+  String get roomCodeHint => 'e.g., Ahmed\'s Game';
+
+  @override
+  String get passwordOptionalHeader => 'Password (optional)';
+
+  @override
+  String get passwordHeader => 'Password';
+
+  @override
+  String get publicGameHint => 'Leave blank for public game';
+
+  @override
+  String get enterPasswordHint => 'Enter password';
+
+  @override
+  String get joinGameChannel => 'Join Game Channel';
+
+  @override
+  String get joinGameTitle => 'Join a Game Channel';
+
+  @override
+  String get errorPrefix => 'Error: ';
+
+  @override
+  String get roomDefaultName => 'The Fun Zone';
+
+  @override
+  String get unknownPlayer => 'Unknown';
+
+  @override
+  String get colorLabel => 'COLOR';
+
+  @override
+  String get unoCalled => 'UNO Called!';
+
+  @override
+  String get chooseColor => 'Choose Color';
+
+  @override
+  String get score => 'Score';
+
+  @override
+  String get theme => 'Theme';
+
+  @override
+  String get systemDefault => 'System Default';
+
+  @override
+  String get lightTheme => 'Light Theme';
+
+  @override
+  String get darkTheme => 'Dark Theme';
+
+  @override
+  String get home => 'Home';
+
+  @override
+  String get friends => 'Friends';
+
+  @override
+  String get profile => 'Profile';
 }

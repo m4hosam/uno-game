@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/theme/app_theme.dart';
+import '../../l10n/app_localizations.dart';
 import '../../data/models/card_model.dart';
 import '../../data/models/player_model.dart';
 import '../../data/models/game_room_model.dart';
@@ -17,6 +18,7 @@ class GameScreen extends ConsumerStatefulWidget {
 
 class _GameScreenState extends ConsumerState<GameScreen>
     with TickerProviderStateMixin {
+  AppLocalizations? _l10n;
   late AnimationController _pulseController;
   late AnimationController _cardFanController;
 
@@ -43,6 +45,7 @@ class _GameScreenState extends ConsumerState<GameScreen>
 
   @override
   Widget build(BuildContext context) {
+    _l10n = AppLocalizations.of(context);
     final size = MediaQuery.of(context).size;
     final roomAsync = ref.watch(roomStreamProvider);
     final currentUserAsync = ref.watch(currentUserProvider);
@@ -51,7 +54,7 @@ class _GameScreenState extends ConsumerState<GameScreen>
       backgroundColor: const Color(0xFF1E1111),
       appBar: AppBar(
         title: Text(
-          roomAsync.value?.name ?? 'The Fun Zone',
+          roomAsync.value?.name ?? _l10n?.roomDefaultName ?? 'The Fun Zone',
           style: const TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 20,
@@ -99,7 +102,8 @@ class _GameScreenState extends ConsumerState<GameScreen>
           // Identify my player
           final myPlayer = room.players.firstWhere(
             (p) => p.id == currentUser?.id,
-            orElse: () => Player(id: 'unknown', name: 'Unknown'),
+            orElse: () =>
+                Player(id: 'unknown', name: _l10n?.unknownPlayer ?? 'Unknown'),
           );
 
           // Identify opponents and order them relative to me
@@ -174,7 +178,7 @@ class _GameScreenState extends ConsumerState<GameScreen>
         },
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (err, stack) => Center(
-            child: Text('Error: $err',
+            child: Text('${_l10n?.errorPrefix ?? 'Error: '}$err',
                 style: const TextStyle(color: Colors.white))),
       ),
     );
@@ -300,7 +304,7 @@ class _GameScreenState extends ConsumerState<GameScreen>
               child: Column(
                 children: [
                   Text(
-                    "COLOR",
+                    _l10n?.colorLabel ?? "COLOR",
                     style: TextStyle(
                       color: Colors.white.withValues(alpha: 0.6),
                       fontSize: 10,
@@ -416,13 +420,13 @@ class _GameScreenState extends ConsumerState<GameScreen>
                     isActive: isMyTurn,
                   ),
 
-                  // UNO Button (Bottom Right)
                   Positioned(
                     right: 0,
                     bottom: 0,
                     child: _UnoButton(
                       onTap: () =>
                           _handleCallUno(context, ref, room, currentUser!),
+                      label: _l10n?.uno ?? "UNO!",
                     ),
                   ),
                 ],
@@ -502,12 +506,12 @@ class _GameScreenState extends ConsumerState<GameScreen>
     if (context.mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: const Row(
+          content: Row(
             children: [
               Icon(Icons.check_circle, color: Colors.white),
               SizedBox(width: 12),
-              Text("UNO Called!",
-                  style: TextStyle(fontWeight: FontWeight.bold)),
+              Text(_l10n?.unoCalled ?? "UNO Called!",
+                  style: const TextStyle(fontWeight: FontWeight.bold)),
             ],
           ),
           backgroundColor: AppTheme.unoRed,
@@ -556,9 +560,9 @@ class _GameScreenState extends ConsumerState<GameScreen>
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Text(
-                'Choose Color',
-                style: TextStyle(
+              Text(
+                _l10n?.chooseColor ?? 'Choose Color',
+                style: const TextStyle(
                   color: Colors.white,
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
@@ -671,8 +675,9 @@ class _AnimatedCardState extends State<_AnimatedCard>
 // Enhanced UNO Button
 class _UnoButton extends StatefulWidget {
   final VoidCallback onTap;
+  final String label;
 
-  const _UnoButton({required this.onTap});
+  const _UnoButton({required this.onTap, required this.label});
 
   @override
   State<_UnoButton> createState() => _UnoButtonState();
@@ -738,9 +743,9 @@ class _UnoButtonState extends State<_UnoButton>
                 ],
               ),
               alignment: Alignment.center,
-              child: const Text(
-                "UNO!",
-                style: TextStyle(
+              child: Text(
+                widget.label,
+                style: const TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
                   fontSize: 18,

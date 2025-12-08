@@ -79,18 +79,18 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         onTap: (index) {
           setState(() => _currentIndex = index);
         },
-        items: const [
+        items: [
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
+            icon: const Icon(Icons.home),
+            label: l10n.home,
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.people),
-            label: 'Friends',
+            icon: const Icon(Icons.people),
+            label: l10n.friends,
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profile',
+            icon: const Icon(Icons.person),
+            label: l10n.profile,
           ),
         ],
       ),
@@ -104,9 +104,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text(
-              'Ready to Play?',
-              style: TextStyle(
+            Text(
+              l10n.readyToPlay,
+              style: const TextStyle(
                 fontSize: 32,
                 fontWeight: FontWeight.bold,
                 color: Colors.white,
@@ -124,7 +124,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 controller: _nameController,
                 style: const TextStyle(color: Colors.white),
                 decoration: InputDecoration(
-                  hintText: 'Enter your name', // Or l10n.enterName if available
+                  hintText: l10n.enterNameHint,
                   hintStyle:
                       TextStyle(color: Colors.white.withValues(alpha: 0.3)),
                   prefixIcon: const Icon(Icons.person, color: Colors.white54),
@@ -179,7 +179,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     // Basic validtion
     if (_nameController.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please enter your name')),
+        SnackBar(content: Text(AppLocalizations.of(context)!.pleaseEnterName)),
       );
       return;
     }

@@ -103,4 +103,94 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get gameOver => 'انتهت اللعبة';
+
+  @override
+  String get welcomeTitle => 'مرحباً!';
+
+  @override
+  String get chooseLanguage => 'اختر لغتك';
+
+  @override
+  String get languageSaved => 'سيتم حفظ تفضيلات اللغة الخاصة بك.';
+
+  @override
+  String get readyToPlay => 'مستعد للعب؟';
+
+  @override
+  String get enterNameHint => 'أدخل اسمك';
+
+  @override
+  String get pleaseEnterName => 'الرجاء إدخال اسمك';
+
+  @override
+  String get createGameChannel => 'إنشاء قناة اللعب';
+
+  @override
+  String get serverNameHeader => 'اسم الخادم';
+
+  @override
+  String get roomNameHint => 'مثال: ليلة أونو أحمد';
+
+  @override
+  String get roomCodeHint => 'مثال: لعبة أحمد';
+
+  @override
+  String get passwordOptionalHeader => 'كلمة المرور (اختياري)';
+
+  @override
+  String get passwordHeader => 'كلمة المرور';
+
+  @override
+  String get publicGameHint => 'اتركه فارغاً للعبة عامة';
+
+  @override
+  String get enterPasswordHint => 'أدخل كلمة المرور';
+
+  @override
+  String get joinGameChannel => 'الانضمام لقناة لعب';
+
+  @override
+  String get joinGameTitle => 'الانضمام لقناة لعب';
+
+  @override
+  String get errorPrefix => 'خطأ: ';
+
+  @override
+  String get roomDefaultName => 'منطقة المرح';
+
+  @override
+  String get unknownPlayer => 'غير معروف';
+
+  @override
+  String get colorLabel => 'لون';
+
+  @override
+  String get unoCalled => 'تم نداء أونو!';
+
+  @override
+  String get chooseColor => 'اختر لوناً';
+
+  @override
+  String get score => 'النتيجة';
+
+  @override
+  String get theme => 'المظهر';
+
+  @override
+  String get systemDefault => 'النظام الافتراضي';
+
+  @override
+  String get lightTheme => 'سمة فاتحة';
+
+  @override
+  String get darkTheme => 'سمة داكنة';
+
+  @override
+  String get home => 'الرئيسية';
+
+  @override
+  String get friends => 'أصدقاء';
+
+  @override
+  String get profile => 'الملف الشخصي';
 }

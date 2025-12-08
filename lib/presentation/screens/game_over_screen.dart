@@ -33,9 +33,7 @@ class GameOverScreen extends StatelessWidget {
               ),
               const SizedBox(height: 24),
               Text(
-                isWinner
-                    ? l10n.winner
-                    : 'Game Over', // TODO: Localize 'Game Over'
+                isWinner ? l10n.winner : l10n.gameOver,
                 style: const TextStyle(
                   fontSize: 48,
                   fontWeight: FontWeight.bold,
@@ -44,7 +42,7 @@ class GameOverScreen extends StatelessWidget {
               ),
               const SizedBox(height: 16),
               Text(
-                'Score: $score',
+                '${l10n.score}: $score',
                 style: const TextStyle(
                   fontSize: 24,
                   color: Colors.white,

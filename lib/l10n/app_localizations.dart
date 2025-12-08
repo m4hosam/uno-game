@@ -289,6 +289,186 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Game Over'**
   String get gameOver;
+
+  /// No description provided for @welcomeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome!'**
+  String get welcomeTitle;
+
+  /// No description provided for @chooseLanguage.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose your language'**
+  String get chooseLanguage;
+
+  /// No description provided for @languageSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Your language preference will be saved.'**
+  String get languageSaved;
+
+  /// No description provided for @readyToPlay.
+  ///
+  /// In en, this message translates to:
+  /// **'Ready to Play?'**
+  String get readyToPlay;
+
+  /// No description provided for @enterNameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your name'**
+  String get enterNameHint;
+
+  /// No description provided for @pleaseEnterName.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter your name'**
+  String get pleaseEnterName;
+
+  /// No description provided for @createGameChannel.
+  ///
+  /// In en, this message translates to:
+  /// **'Create Game Channel'**
+  String get createGameChannel;
+
+  /// No description provided for @serverNameHeader.
+  ///
+  /// In en, this message translates to:
+  /// **'Server Name'**
+  String get serverNameHeader;
+
+  /// No description provided for @roomNameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g., Ahmed\'s Uno Night'**
+  String get roomNameHint;
+
+  /// No description provided for @roomCodeHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g., Ahmed\'s Game'**
+  String get roomCodeHint;
+
+  /// No description provided for @passwordOptionalHeader.
+  ///
+  /// In en, this message translates to:
+  /// **'Password (optional)'**
+  String get passwordOptionalHeader;
+
+  /// No description provided for @passwordHeader.
+  ///
+  /// In en, this message translates to:
+  /// **'Password'**
+  String get passwordHeader;
+
+  /// No description provided for @publicGameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave blank for public game'**
+  String get publicGameHint;
+
+  /// No description provided for @enterPasswordHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter password'**
+  String get enterPasswordHint;
+
+  /// No description provided for @joinGameChannel.
+  ///
+  /// In en, this message translates to:
+  /// **'Join Game Channel'**
+  String get joinGameChannel;
+
+  /// No description provided for @joinGameTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Join a Game Channel'**
+  String get joinGameTitle;
+
+  /// No description provided for @errorPrefix.
+  ///
+  /// In en, this message translates to:
+  /// **'Error: '**
+  String get errorPrefix;
+
+  /// No description provided for @roomDefaultName.
+  ///
+  /// In en, this message translates to:
+  /// **'The Fun Zone'**
+  String get roomDefaultName;
+
+  /// No description provided for @unknownPlayer.
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown'**
+  String get unknownPlayer;
+
+  /// No description provided for @colorLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'COLOR'**
+  String get colorLabel;
+
+  /// No description provided for @unoCalled.
+  ///
+  /// In en, this message translates to:
+  /// **'UNO Called!'**
+  String get unoCalled;
+
+  /// No description provided for @chooseColor.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose Color'**
+  String get chooseColor;
+
+  /// No description provided for @score.
+  ///
+  /// In en, this message translates to:
+  /// **'Score'**
+  String get score;
+
+  /// No description provided for @theme.
+  ///
+  /// In en, this message translates to:
+  /// **'Theme'**
+  String get theme;
+
+  /// No description provided for @systemDefault.
+  ///
+  /// In en, this message translates to:
+  /// **'System Default'**
+  String get systemDefault;
+
+  /// No description provided for @lightTheme.
+  ///
+  /// In en, this message translates to:
+  /// **'Light Theme'**
+  String get lightTheme;
+
+  /// No description provided for @darkTheme.
+  ///
+  /// In en, this message translates to:
+  /// **'Dark Theme'**
+  String get darkTheme;
+
+  /// No description provided for @home.
+  ///
+  /// In en, this message translates to:
+  /// **'Home'**
+  String get home;
+
+  /// No description provided for @friends.
+  ///
+  /// In en, this message translates to:
+  /// **'Friends'**
+  String get friends;
+
+  /// No description provided for @profile.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile'**
+  String get profile;
 }
 
 class _AppLocalizationsDelegate
