@@ -132,7 +132,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get roomNameHint => 'مثال: ليلة أونو أحمد';
 
   @override
-  String get roomCodeHint => 'مثال: لعبة أحمد';
+  String get roomCodeHint => 'مثال: 123456EF';
 
   @override
   String get passwordOptionalHeader => 'كلمة المرور (اختياري)';

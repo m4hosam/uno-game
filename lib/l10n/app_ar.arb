@@ -40,7 +40,7 @@
   "createGameChannel": "إنشاء قناة اللعب",
   "serverNameHeader": "اسم الخادم",
   "roomNameHint": "مثال: ليلة أونو أحمد",
-  "roomCodeHint": "مثال: لعبة أحمد",
+  "roomCodeHint": "مثال: 123456EF",
   "passwordOptionalHeader": "كلمة المرور (اختياري)",
   "passwordHeader": "كلمة المرور",
   "publicGameHint": "اتركه فارغاً للعبة عامة",

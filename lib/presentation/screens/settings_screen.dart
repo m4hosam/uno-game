@@ -19,38 +19,6 @@ class SettingsScreen extends ConsumerWidget {
       body: SafeArea(
         child: ListView(
           children: [
-            _buildSectionHeader(context, l10n.theme),
-            RadioListTile<ThemeMode>(
-              title: Text(l10n.systemDefault),
-              value: ThemeMode.system,
-              groupValue: currentTheme,
-              onChanged: (value) {
-                if (value != null) {
-                  ref.read(themeProvider.notifier).setTheme(value);
-                }
-              },
-            ),
-            RadioListTile<ThemeMode>(
-              title: Text(l10n.lightTheme),
-              value: ThemeMode.light,
-              groupValue: currentTheme,
-              onChanged: (value) {
-                if (value != null) {
-                  ref.read(themeProvider.notifier).setTheme(value);
-                }
-              },
-            ),
-            RadioListTile<ThemeMode>(
-              title: Text(l10n.darkTheme),
-              value: ThemeMode.dark,
-              groupValue: currentTheme,
-              onChanged: (value) {
-                if (value != null) {
-                  ref.read(themeProvider.notifier).setTheme(value);
-                }
-              },
-            ),
-            const Divider(),
             _buildSectionHeader(context, l10n.language),
             RadioListTile<Locale>(
               title: Text(l10n.english),

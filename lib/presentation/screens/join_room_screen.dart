@@ -123,15 +123,6 @@ class _JoinRoomScreenState extends ConsumerState<JoinRoomScreen> {
               children: [
                 const SizedBox(height: 20),
 
-                Text(l10n.joinGameTitle,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                    )),
-
-                const SizedBox(height: 32),
-
                 // Server Name
                 Text(l10n.serverNameHeader, style: headerStyle),
                 const SizedBox(height: 8),

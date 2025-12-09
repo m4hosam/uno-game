@@ -132,7 +132,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get roomNameHint => 'e.g., Ahmed\'s Uno Night';
 
   @override
-  String get roomCodeHint => 'e.g., Ahmed\'s Game';
+  String get roomCodeHint => 'e.g., 123456EF';
 
   @override
   String get passwordOptionalHeader => 'Password (optional)';

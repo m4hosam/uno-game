@@ -347,7 +347,7 @@ abstract class AppLocalizations {
   /// No description provided for @roomCodeHint.
   ///
   /// In en, this message translates to:
-  /// **'e.g., Ahmed\'s Game'**
+  /// **'e.g., 123456EF'**
   String get roomCodeHint;
 
   /// No description provided for @passwordOptionalHeader.

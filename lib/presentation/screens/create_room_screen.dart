@@ -104,27 +104,6 @@ class _CreateRoomScreenState extends ConsumerState<CreateRoomScreen> {
               children: [
                 const SizedBox(height: 20),
 
-                // Deck Image
-                Center(
-                  child: Container(
-                    width: 200,
-                    height: 200,
-                    decoration: BoxDecoration(
-                      color: const Color(
-                          0xFFF4B886), // Beige background square from design
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    clipBehavior:
-                        Clip.antiAlias, // Ensure image respects border radius
-                    child: Image.asset(
-                      'docs/cards-assets/uno_deck.png',
-                      fit: BoxFit.contain, // Fit within the box
-                    ),
-                  ),
-                ),
-
-                const SizedBox(height: 48),
-
                 // Server Name Input
                 Text(l10n.serverNameHeader, style: headerStyle),
                 const SizedBox(height: 8),

@@ -40,7 +40,7 @@
   "createGameChannel": "Create Game Channel",
   "serverNameHeader": "Server Name",
   "roomNameHint": "e.g., Ahmed's Uno Night",
-  "roomCodeHint": "e.g., Ahmed's Game",
+  "roomCodeHint": "e.g., 123456EF",
   "passwordOptionalHeader": "Password (optional)",
   "passwordHeader": "Password",
   "publicGameHint": "Leave blank for public game",
