@@ -195,5 +195,5 @@ class AppLocalizationsEn extends AppLocalizations {
   String get profile => 'Profile';
 
   @override
-  String get backToHome => 'Back to home';
+  String get backToHome => 'Back to Home';
 }
