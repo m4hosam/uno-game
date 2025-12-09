@@ -8,7 +8,6 @@ import '../../data/models/game_room_model.dart';
 import '../widgets/uno_card_widget.dart';
 import '../providers/game_providers.dart';
 import '../../data/services/game_logic_service.dart';
-import 'game_over_screen.dart';
 
 class GameScreen extends ConsumerStatefulWidget {
   const GameScreen({super.key});
@@ -85,20 +84,6 @@ class _GameScreenState extends ConsumerState<GameScreen>
 
           final currentUser = currentUserAsync.value;
 
-          // Check for Game Over
-          if (room.status == RoomStatus.finished) {
-            final isWinner = room.gameState!.winnerId == currentUser?.id;
-            int score = 0;
-            if (isWinner) {
-              final gameLogic = ref.read(gameLogicServiceProvider);
-              for (var p in room.players) {
-                if (p.id != currentUser?.id) {
-                  score += gameLogic.calculateScore(p.hand ?? []);
-                }
-              }
-            }
-            return GameOverScreen(isWinner: isWinner, score: score);
-          }
           final gameState = room.gameState!;
 
           // Identify my player
@@ -107,6 +92,10 @@ class _GameScreenState extends ConsumerState<GameScreen>
             orElse: () =>
                 Player(id: 'unknown', name: _l10n?.unknownPlayer ?? 'Unknown'),
           );
+
+          // Check for Game Over to determining if we show the popup
+          final isGameOver = room.status == RoomStatus.finished;
+          final isWinner = isGameOver && gameState.winnerId == currentUser?.id;
 
           // Identify opponents and order them relative to me
           final allPlayers = room.players;
@@ -184,6 +173,7 @@ class _GameScreenState extends ConsumerState<GameScreen>
                     isMyTurn,
                   ),
                 ),
+                if (isGameOver) _buildGameOverPopup(context, isWinner),
               ],
             ),
           );
@@ -672,6 +662,50 @@ class _GameScreenState extends ConsumerState<GameScreen>
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildGameOverPopup(BuildContext context, bool isWinner) {
+    return Container(
+      color: Colors.black.withValues(alpha: 0.7),
+      width: double.infinity,
+      height: double.infinity,
+      child: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Image.asset(
+              isWinner
+                  ? 'docs/cards-assets/you_win.png'
+                  : 'docs/cards-assets/you_lose.png',
+              width: 300,
+              fit: BoxFit.contain,
+            ),
+            const SizedBox(height: 30),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: isWinner ? AppTheme.unoGreen : AppTheme.unoRed,
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30),
+                ),
+              ),
+              child: Text(
+                _l10n?.backToHome ?? "Back to Home",
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );

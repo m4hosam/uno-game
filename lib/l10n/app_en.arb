@@ -60,5 +60,6 @@
   "darkTheme": "Dark Theme",
   "home": "Home",
   "friends": "Friends",
-  "profile": "Profile"
+  "profile": "Profile",
+  "backToHome": "Back to Home"
 }
